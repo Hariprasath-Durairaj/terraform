@@ -11,7 +11,25 @@ resource "azurerm_web_application_firewall_policy" "this" {
     max_request_body_size_in_kb = 128
   }
 
-  custom_rules = var.custom_rules
+  dynamic "custom_rules" {
+  for_each = var.custom_rules
+  content {
+    name      = custom_rules.value.name
+    priority  = custom_rules.value.priority
+    rule_type = custom_rules.value.rule_type
+
+    match_conditions {
+      match_variables {
+        variable_name = "RemoteAddr"
+      }
+      operator           = "IPMatch"
+      match_values       = custom_rules.value.match_values
+    }
+
+    action = custom_rules.value.action
+  }
+}
+
 
   managed_rules {
     managed_rule_set {
