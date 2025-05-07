@@ -6,19 +6,20 @@ resource "azurerm_kubernetes_cluster" "this" {
   kubernetes_version  = var.kubernetes_version
   node_resource_group = var.node_resource_group
 
-  default_node_pool {
-    name                = var.default_node_pool.name
-    vm_size             = var.default_node_pool.vm_size
-    enable_auto_scaling = var.default_node_pool.enable_auto_scaling
-    min_count           = var.default_node_pool.min_count
-    max_count           = var.default_node_pool.max_count
-    max_pods            = var.default_node_pool.max_pods
-    os_disk_size_gb     = var.default_node_pool.os_disk_size_gb
-    node_labels         = var.default_node_pool.node_labels
-    vnet_subnet_id      = var.default_node_pool.vnet_subnet_id
-    mode                = "System"  # ✅ valid here only
-    tags                = var.default_node_pool.tags
-  }
+default_node_pool {
+  name                = var.default_node_pool.name
+  vm_size             = var.default_node_pool.vm_size
+  enable_auto_scaling = var.default_node_pool.enable_auto_scaling
+  min_count           = var.default_node_pool.min_count
+  max_count           = var.default_node_pool.max_count
+  max_pods            = var.default_node_pool.max_pods
+  os_disk_size_gb     = var.default_node_pool.os_disk_size_gb
+  node_labels         = var.default_node_pool.node_labels
+  vnet_subnet_id      = var.default_node_pool.vnet_subnet_id
+  mode                = "System"
+  tags                = var.default_node_pool.tags
+}
+
 
   identity {
     type = "SystemAssigned"
