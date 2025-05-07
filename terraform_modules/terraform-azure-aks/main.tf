@@ -3,7 +3,6 @@ resource "azurerm_kubernetes_cluster" "this" {
   location            = var.location
   resource_group_name = var.resource_group_name
   dns_prefix          = var.dns_prefix
-
   kubernetes_version  = var.kubernetes_version
   node_resource_group = var.node_resource_group
 
@@ -17,8 +16,8 @@ resource "azurerm_kubernetes_cluster" "this" {
     os_disk_size_gb     = var.default_node_pool.os_disk_size_gb
     type                = var.default_node_pool.type
     node_labels         = var.default_node_pool.node_labels
-    tags                = var.default_node_pool.tags
     vnet_subnet_id      = var.default_node_pool.vnet_subnet_id
+    tags                = var.default_node_pool.tags
   }
 
   identity {
@@ -37,4 +36,20 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   tags = var.tags
+}
+
+resource "azurerm_kubernetes_cluster_node_pool" "user_pools" {
+  for_each = var.user_node_pools
+
+  name                  = each.value.name
+  kubernetes_cluster_id = azurerm_kubernetes_cluster.this.id
+  vm_size               = each.value.vm_size
+  node_count            = each.value.node_count
+  max_pods              = each.value.max_pods
+  os_disk_size_gb       = each.value.os_disk_size_gb
+  mode                  = each.value.mode
+  node_labels           = each.value.node_labels
+  vnet_subnet_id        = each.value.vnet_subnet_id
+  orchestrator_version  = var.kubernetes_version
+  tags                  = each.value.tags
 }
