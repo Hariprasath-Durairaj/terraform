@@ -24,9 +24,8 @@ resource "azurerm_kubernetes_cluster" "this" {
     type = "SystemAssigned"
   }
 
-  role_based_access_control {
-    enabled = true
-  }
+role_based_access_control_enabled = true
+
 
   network_profile {
     network_plugin     = var.network_plugin
