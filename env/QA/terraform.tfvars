@@ -1,6 +1,6 @@
 location            = "canadacentral"
-resource_group_name = "dhdp-qa-resource-group"
-tenant_id           = "REPLACE_WITH_TENANT_ID"
+resource_group_name = "dhdp-lab-resource-group"
+tenant_id           = "c25c5028-2135-4990-9b82-d8c62774306a"  # Real tenant ID
 
 tags = {
   Environment = "QA"
@@ -43,11 +43,11 @@ bastion_name     = "dhdp-qa-bastion"
 private_dns_name       = "privatelink.azurecr.io"
 private_dns_link_name  = "acr-dns-link"
 vnet_peering_name      = "dhdp-qa-peering"
-remote_virtual_network_id = "REPLACE_WITH_REMOTE_VNET_ID"
+remote_virtual_network_id = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-mgmt-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-mgmt-vnet"
 
 key_vault_name          = "dhdp-qa-kv"
 disk_encryption_set_name = "dhdp-qa-des"
-key_vault_key_id        = "REPLACE_WITH_KEY_VAULT_KEY_ID"
+key_vault_key_id        = "https://dhdp-qa-kv.vault.azure.net/keys/dhdp-qa-acr-cmk-key/d362cbd7f7e349ceaa138e143f608321"
 
 acr_name = "dhdpqaacr"
 
@@ -67,7 +67,7 @@ default_node_pool = {
   type                = "System"
   node_labels         = { "type" = "system" }
   tags                = {}
-  vnet_subnet_id      = "REPLACE_WITH_AKS_SUBNET_ID"
+  vnet_subnet_id      = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-qa-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-qa-vnet/subnets/aks-subnet"
 }
 
 user_node_pools = {
@@ -79,7 +79,7 @@ user_node_pools = {
     max_pods        = 110
     mode            = "User"
     node_labels     = { "app" = "bitnobi" }
-    vnet_subnet_id  = "REPLACE_WITH_AKS_SUBNET_ID"
+    vnet_subnet_id  = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-qa-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-qa-vnet/subnets/aks-subnet"
     tags            = { "app" = "bitnobi" }
   },
   candig = {
@@ -90,7 +90,7 @@ user_node_pools = {
     max_pods        = 110
     mode            = "User"
     node_labels     = { "app" = "candig" }
-    vnet_subnet_id  = "REPLACE_WITH_AKS_SUBNET_ID"
+    vnet_subnet_id  = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-qa-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-qa-vnet/subnets/aks-subnet"
     tags            = { "app" = "candig" }
   },
   keycloak = {
@@ -101,7 +101,7 @@ user_node_pools = {
     max_pods        = 110
     mode            = "User"
     node_labels     = { "app" = "keycloak" }
-    vnet_subnet_id  = "REPLACE_WITH_AKS_SUBNET_ID"
+    vnet_subnet_id  = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-qa-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-qa-vnet/subnets/aks-subnet"
     tags            = { "app" = "keycloak" }
   },
   integrateai = {
@@ -112,7 +112,7 @@ user_node_pools = {
     max_pods        = 110
     mode            = "User"
     node_labels     = { "app" = "integrateai" }
-    vnet_subnet_id  = "REPLACE_WITH_AKS_SUBNET_ID"
+    vnet_subnet_id  = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-qa-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-qa-vnet/subnets/aks-subnet"
     tags            = { "app" = "integrateai" }
   },
   webapp = {
@@ -123,7 +123,7 @@ user_node_pools = {
     max_pods        = 110
     mode            = "User"
     node_labels     = { "app" = "webapp" }
-    vnet_subnet_id  = "REPLACE_WITH_WEBAPP_SUBNET_ID"
+    vnet_subnet_id  = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-qa-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-qa-vnet/subnets/webapp-subnet"
     tags            = { "app" = "webapp" }
   }
 }
