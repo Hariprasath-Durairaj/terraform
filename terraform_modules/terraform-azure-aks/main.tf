@@ -16,7 +16,7 @@ default_node_pool {
   os_disk_size_gb     = var.default_node_pool.os_disk_size_gb
   node_labels         = var.default_node_pool.node_labels
   vnet_subnet_id      = var.default_node_pool.vnet_subnet_id
-  mode                = "System"
+  mode                = "System"               # ✅ this is correct
   tags                = var.default_node_pool.tags
 }
 
