@@ -45,6 +45,22 @@ variable "default_node_pool" {
   })
 }
 
+variable "user_node_pools" {
+  description = "Map of additional named user node pools"
+  type = map(object({
+    name            = string
+    vm_size         = string
+    os_disk_size_gb = number
+    node_count      = number
+    max_pods        = number
+    mode            = string
+    node_labels     = map(string)
+    vnet_subnet_id  = string
+    tags            = map(string)
+  }))
+  default = {}
+}
+
 variable "network_plugin" {
   description = "Network plugin to use"
   type        = string
