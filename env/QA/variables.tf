@@ -241,3 +241,18 @@ variable "tags" {
   description = "Common tags to apply to all resources"
   default     = {}
 }
+
+variable "user_node_pools" {
+  description = "Map of user-defined node pools for AKS"
+  type = map(object({
+    name            = string
+    vm_size         = string
+    os_disk_size_gb = number
+    node_count      = number
+    max_pods        = number
+    mode            = string
+    node_labels     = map(string)
+    vnet_subnet_id  = string
+    tags            = map(string)
+  }))
+}
