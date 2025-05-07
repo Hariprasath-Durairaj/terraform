@@ -15,7 +15,8 @@ stages:
   - stage: Terraform
     displayName: 'Terraform CLI Workflow'
     jobs:
-      - job: TerraformSteps
+      - job: TerraformSetupPlan
+        displayName: 'Terraform Init, Validate, Plan'
         steps:
           - checkout: self
 
@@ -42,23 +43,43 @@ stages:
             workingDirectory: $(workingDirectory)
             displayName: 'Terraform Plan'
 
+      - job: PreApplyApproval
+        displayName: '⏸ Await Terraform Apply Approval'
+        pool: server
+        dependsOn: TerraformSetupPlan
+        steps:
           - task: ManualValidation@0
-            displayName: '⏸ Approve Terraform Apply?'
             inputs:
-              instructions: 'Review the Terraform plan output and approve deployment to QA.'
+              instructions: 'Review the Terraform plan output and approve apply to QA.'
               onTimeout: 'reject'
               timeout: '1.00:00:00'
+
+      - job: Apply
+        displayName: 'Terraform Apply'
+        dependsOn: PreApplyApproval
+        steps:
+          - checkout: self
 
           - script: terraform apply -auto-approve tfplan.out
             workingDirectory: $(workingDirectory)
             displayName: 'Terraform Apply'
 
+      - job: PreDestroyApproval
+        displayName: '⏸ Await Terraform Destroy Approval'
+        pool: server
+        dependsOn: Apply
+        steps:
           - task: ManualValidation@0
-            displayName: '⏸ Approve Terraform Destroy?'
             inputs:
               instructions: 'Confirm you want to tear down the QA environment.'
               onTimeout: 'reject'
               timeout: '1.00:00:00'
+
+      - job: Destroy
+        displayName: 'Terraform Destroy'
+        dependsOn: PreDestroyApproval
+        steps:
+          - checkout: self
 
           - script: terraform destroy -auto-approve
             workingDirectory: $(workingDirectory)
