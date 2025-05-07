@@ -46,6 +46,7 @@ stages:
               backendAzureRmContainerName: '$(backendContainerName)'
               backendAzureRmKey: '$(backendKey)'
               backendAzureRmUseOIDC: true
+              useTerraformVersion: '1.5.7'
 
   - stage: Validate
     displayName: 'Terraform Validate'
@@ -81,6 +82,7 @@ stages:
               backendAzureRmContainerName: '$(backendContainerName)'
               backendAzureRmKey: '$(backendKey)'
               backendAzureRmUseOIDC: true
+              useTerraformVersion: '1.5.7'
 
           - task: TerraformTaskV4@4
             displayName: 'Terraform Validate'
@@ -89,6 +91,7 @@ stages:
               command: 'validate'
               workingDirectory: '$(workingDirectory)'
               environmentServiceNameAzureRM: '$(serviceConnection)'
+              useTerraformVersion: '1.5.7'
 
   - stage: Plan
     displayName: 'Terraform Plan'
@@ -124,6 +127,7 @@ stages:
               backendAzureRmContainerName: '$(backendContainerName)'
               backendAzureRmKey: '$(backendKey)'
               backendAzureRmUseOIDC: true
+              useTerraformVersion: '1.5.7'
 
           - task: TerraformTaskV4@4
             displayName: 'Terraform Plan'
@@ -135,3 +139,4 @@ stages:
               publishPlanResults: true
               planOutput: 'tfplan.out'
               varsFile: 'qa.tfvars'
+              useTerraformVersion: '1.5.7'
