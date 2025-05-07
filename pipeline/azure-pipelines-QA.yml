@@ -24,7 +24,7 @@ stages:
 
           - task: TerraformInstaller@1
             inputs:
-              terraformVersion: 'latest'
+              terraformVersion: '1.5.7'
 
           - task: TerraformTaskV4@4
             inputs:
@@ -49,7 +49,7 @@ stages:
 
           - task: TerraformInstaller@1
             inputs:
-              terraformVersion: 'latest'
+              terraformVersion: '1.5.7'
 
           - task: TerraformTaskV4@4
             inputs:
@@ -81,7 +81,7 @@ stages:
 
           - task: TerraformInstaller@1
             inputs:
-              terraformVersion: 'latest'
+              terraformVersion: '1.5.7'
 
           - task: TerraformTaskV4@4
             inputs:
@@ -126,7 +126,7 @@ stages:
 
           - task: TerraformInstaller@1
             inputs:
-              terraformVersion: 'latest'
+              terraformVersion: '1.5.7'
 
           - task: TerraformTaskV4@4
             inputs:
@@ -160,7 +160,7 @@ stages:
 
           - task: TerraformInstaller@1
             inputs:
-              terraformVersion: 'latest'
+              terraformVersion: '1.5.7'
 
           - task: TerraformTaskV4@4
             inputs:
