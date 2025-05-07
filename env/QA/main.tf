@@ -2,6 +2,10 @@
 # DHDP QA Environment Modules
 # ------------------------
 
+provider "azurerm" {
+  features {}
+}
+
 # Network
 module "vnet" {
   source              = "../../terraform_modules/terraform-azure-network"
