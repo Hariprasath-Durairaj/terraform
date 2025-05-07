@@ -6,161 +6,60 @@ pool:
 
 variables:
   workingDirectory: 'dhdp-env/QA'
-  serviceConnection: 'dhdp-infra-sc'
   backendResourceGroup: 'dhdp-lab-resource-group'
   backendStorageAccount: 'dhdplabsa'
   backendContainerName: 'tfstate'
-  backendKey: 'qa.terraform.tfstate'
+  backendKey: 'qa/terraform.tfstate'
 
 stages:
-  - stage: Init
-    displayName: 'Terraform Init'
+  - stage: Terraform
+    displayName: 'Terraform CLI Workflow'
     jobs:
-      - job: Init
+      - job: TerraformSteps
         steps:
           - checkout: self
-            persistCredentials: true
 
-          - task: TerraformInstaller@1
+          - task: Bash@3
+            displayName: 'Install Terraform 1.5.7'
             inputs:
-              terraformVersion: '1.5.7'
+              targetType: 'inline'
+              script: |
+                curl -sLo terraform.zip https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_amd64.zip
+                unzip terraform.zip
+                sudo mv terraform /usr/local/bin/
+                terraform -version
 
           - script: |
-              echo "##vso[task.setvariable variable=PATH]/opt/hostedtoolcache/terraform/1.5.7/x64:$PATH"
-            displayName: 'Force Terraform Path'
+              terraform init                 -backend-config="resource_group_name=$(backendResourceGroup)"                 -backend-config="storage_account_name=$(backendStorageAccount)"                 -backend-config="container_name=$(backendContainerName)"                 -backend-config="key=$(backendKey)"
+            workingDirectory: $(workingDirectory)
+            displayName: 'Terraform Init'
 
-          - task: TerraformTaskV4@4
-            inputs:
-              provider: 'azurerm'
-              command: 'init'
-              workingDirectory: '$(workingDirectory)'
-              backendServiceArm: '$(serviceConnection)'
-              backendAzureRmResourceGroupName: '$(backendResourceGroup)'
-              backendAzureRmStorageAccountName: '$(backendStorageAccount)'
-              backendAzureRmContainerName: '$(backendContainerName)'
-              backendAzureRmKey: '$(backendKey)'
-              backendAzureRmUseOIDC: true
+          - script: terraform validate
+            workingDirectory: $(workingDirectory)
+            displayName: 'Terraform Validate'
 
-  - stage: Validate
-    displayName: 'Terraform Validate'
-    dependsOn: Init
-    jobs:
-      - job: Validate
-        steps:
-          - checkout: self
-            persistCredentials: true
+          - script: terraform plan -out=tfplan.out
+            workingDirectory: $(workingDirectory)
+            displayName: 'Terraform Plan'
 
-          - task: TerraformInstaller@1
-            inputs:
-              terraformVersion: '1.5.7'
-
-          - script: |
-              echo "##vso[task.setvariable variable=PATH]/opt/hostedtoolcache/terraform/1.5.7/x64:$PATH"
-            displayName: 'Force Terraform Path'
-
-          - task: TerraformTaskV4@4
-            inputs:
-              provider: 'azurerm'
-              command: 'validate'
-              workingDirectory: '$(workingDirectory)'
-              environmentServiceNameAzureRM: '$(serviceConnection)'
-
-  - stage: Plan
-    displayName: 'Terraform Plan'
-    dependsOn: Validate
-    jobs:
-      - job: Plan
-        steps:
-          - checkout: self
-            persistCredentials: true
-
-          - task: TerraformInstaller@1
-            inputs:
-              terraformVersion: '1.5.7'
-
-          - script: |
-              echo "##vso[task.setvariable variable=PATH]/opt/hostedtoolcache/terraform/1.5.7/x64:$PATH"
-            displayName: 'Force Terraform Path'
-
-          - task: TerraformTaskV4@4
-            inputs:
-              provider: 'azurerm'
-              command: 'plan'
-              workingDirectory: '$(workingDirectory)'
-              environmentServiceNameAzureRM: '$(serviceConnection)'
-              publishPlanResults: true
-              planOutput: 'tfplan.out'
-
-  - stage: Apply
-    displayName: 'Terraform Apply'
-    dependsOn: Plan
-    jobs:
-      - job: PreApplyApproval
-        displayName: '⏸ Await Apply Approval'
-        pool: server
-        steps:
           - task: ManualValidation@0
+            displayName: '⏸ Approve Terraform Apply?'
             inputs:
-              instructions: 'Please review the plan and approve deployment to QA.'
+              instructions: 'Review the Terraform plan output and approve deployment to QA.'
               onTimeout: 'reject'
               timeout: '1.00:00:00'
 
-      - job: Apply
-        dependsOn: PreApplyApproval
-        steps:
-          - checkout: self
-            persistCredentials: true
+          - script: terraform apply -auto-approve tfplan.out
+            workingDirectory: $(workingDirectory)
+            displayName: 'Terraform Apply'
 
-          - task: TerraformInstaller@1
-            inputs:
-              terraformVersion: '1.5.7'
-
-          - script: |
-              echo "##vso[task.setvariable variable=PATH]/opt/hostedtoolcache/terraform/1.5.7/x64:$PATH"
-            displayName: 'Force Terraform Path'
-
-          - task: TerraformTaskV4@4
-            inputs:
-              provider: 'azurerm'
-              command: 'apply'
-              workingDirectory: '$(workingDirectory)'
-              environmentServiceNameAzureRM: '$(serviceConnection)'
-              planInput: 'tfplan.out'
-              autoApprove: true
-
-  - stage: Destroy
-    displayName: 'Terraform Destroy'
-    dependsOn: Apply
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-    jobs:
-      - job: PreDestroyApproval
-        displayName: '⏸ Await Destroy Approval'
-        pool: server
-        steps:
           - task: ManualValidation@0
+            displayName: '⏸ Approve Terraform Destroy?'
             inputs:
-              instructions: 'Confirm you want to tear down QA infra.'
+              instructions: 'Confirm you want to tear down the QA environment.'
               onTimeout: 'reject'
               timeout: '1.00:00:00'
 
-      - job: Destroy
-        dependsOn: PreDestroyApproval
-        steps:
-          - checkout: self
-            persistCredentials: true
-
-          - task: TerraformInstaller@1
-            inputs:
-              terraformVersion: '1.5.7'
-
-          - script: |
-              echo "##vso[task.setvariable variable=PATH]/opt/hostedtoolcache/terraform/1.5.7/x64:$PATH"
-            displayName: 'Force Terraform Path'
-
-          - task: TerraformTaskV4@4
-            inputs:
-              provider: 'azurerm'
-              command: 'destroy'
-              workingDirectory: '$(workingDirectory)'
-              environmentServiceNameAzureRM: '$(serviceConnection)'
-              autoApprove: true
+          - script: terraform destroy -auto-approve
+            workingDirectory: $(workingDirectory)
+            displayName: 'Terraform Destroy'
