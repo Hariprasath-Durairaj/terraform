@@ -128,6 +128,7 @@ module "aks" {
   kubernetes_version  = var.kubernetes_version
   node_resource_group = var.node_resource_group
   default_node_pool   = var.default_node_pool
+  user_node_pools = var.user_node_pools
   network_plugin      = var.network_plugin
   dns_service_ip      = var.dns_service_ip
   service_cidr        = var.service_cidr
