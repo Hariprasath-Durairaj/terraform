@@ -16,7 +16,7 @@ resource "azurerm_kubernetes_cluster" "this" {
     os_disk_size_gb     = var.default_node_pool.os_disk_size_gb
     node_labels         = var.default_node_pool.node_labels
     vnet_subnet_id      = var.default_node_pool.vnet_subnet_id
-    mode                = "System" # ✅ Correct location
+    
     tags                = var.default_node_pool.tags
   }
 
