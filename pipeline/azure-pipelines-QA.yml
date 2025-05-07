@@ -1,0 +1,171 @@
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  workingDirectory: 'dhdp-env/QA'
+  serviceConnection: 'dhdp-infra-sc'
+
+  backendResourceGroup: 'dhdp-lab-resource-group'
+  backendStorageAccount: 'dhdplabsa'
+  backendContainerName: 'tfstate'
+  backendKey: 'qa.terraform.tfstate'
+
+stages:
+  - stage: Init
+    displayName: 'Terraform Init'
+    jobs:
+      - job: Init
+        steps:
+          - checkout: self
+            persistCredentials: true
+
+          - task: TerraformInstaller@1
+            inputs:
+              terraformVersion: 'latest'
+
+          - task: TerraformTaskV4@4
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              workingDirectory: '$(workingDirectory)'
+              backendServiceArm: '$(serviceConnection)'
+              backendAzureRmResourceGroupName: '$(backendResourceGroup)'
+              backendAzureRmStorageAccountName: '$(backendStorageAccount)'
+              backendAzureRmContainerName: '$(backendContainerName)'
+              backendAzureRmKey: '$(backendKey)'
+              backendAzureRmUseOIDC: true
+
+  - stage: Validate
+    displayName: 'Terraform Validate'
+    dependsOn: Init
+    jobs:
+      - job: Validate
+        steps:
+          - checkout: self
+            persistCredentials: true
+
+          - task: TerraformInstaller@1
+            inputs:
+              terraformVersion: 'latest'
+
+          - task: TerraformTaskV4@4
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              workingDirectory: '$(workingDirectory)'
+              backendServiceArm: '$(serviceConnection)'
+              backendAzureRmResourceGroupName: '$(backendResourceGroup)'
+              backendAzureRmStorageAccountName: '$(backendStorageAccount)'
+              backendAzureRmContainerName: '$(backendContainerName)'
+              backendAzureRmKey: '$(backendKey)'
+              backendAzureRmUseOIDC: true
+
+          - task: TerraformTaskV4@4
+            inputs:
+              provider: 'azurerm'
+              command: 'validate'
+              workingDirectory: '$(workingDirectory)'
+              environmentServiceNameAzureRM: '$(serviceConnection)'
+
+  - stage: Plan
+    displayName: 'Terraform Plan'
+    dependsOn: Validate
+    jobs:
+      - job: Plan
+        steps:
+          - checkout: self
+            persistCredentials: true
+
+          - task: TerraformInstaller@1
+            inputs:
+              terraformVersion: 'latest'
+
+          - task: TerraformTaskV4@4
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              workingDirectory: '$(workingDirectory)'
+              backendServiceArm: '$(serviceConnection)'
+              backendAzureRmResourceGroupName: '$(backendResourceGroup)'
+              backendAzureRmStorageAccountName: '$(backendStorageAccount)'
+              backendAzureRmContainerName: '$(backendContainerName)'
+              backendAzureRmKey: '$(backendKey)'
+              backendAzureRmUseOIDC: true
+
+          - task: TerraformTaskV4@4
+            inputs:
+              provider: 'azurerm'
+              command: 'plan'
+              workingDirectory: '$(workingDirectory)'
+              environmentServiceNameAzureRM: '$(serviceConnection)'
+              publishPlanResults: true
+              planOutput: 'tfplan.out'
+
+  - stage: Apply
+    displayName: 'Terraform Apply'
+    dependsOn: Plan
+    jobs:
+      - job: PreApplyApproval
+        displayName: '⏸ Await Apply Approval'
+        pool: server
+        steps:
+          - task: ManualValidation@0
+            inputs:
+              instructions: 'Please review the plan and approve deployment to QA.'
+              onTimeout: 'reject'
+              timeout: '1.00:00:00'
+
+      - job: Apply
+        dependsOn: PreApplyApproval
+        steps:
+          - checkout: self
+            persistCredentials: true
+
+          - task: TerraformInstaller@1
+            inputs:
+              terraformVersion: 'latest'
+
+          - task: TerraformTaskV4@4
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              workingDirectory: '$(workingDirectory)'
+              environmentServiceNameAzureRM: '$(serviceConnection)'
+              planInput: 'tfplan.out'
+              autoApprove: true
+
+  - stage: Destroy
+    displayName: 'Terraform Destroy'
+    dependsOn: Apply
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - job: PreDestroyApproval
+        displayName: '⏸ Await Destroy Approval'
+        pool: server
+        steps:
+          - task: ManualValidation@0
+            inputs:
+              instructions: 'Confirm you want to tear down QA infra.'
+              onTimeout: 'reject'
+              timeout: '1.00:00:00'
+
+      - job: Destroy
+        dependsOn: PreDestroyApproval
+        steps:
+          - checkout: self
+            persistCredentials: true
+
+          - task: TerraformInstaller@1
+            inputs:
+              terraformVersion: 'latest'
+
+          - task: TerraformTaskV4@4
+            inputs:
+              provider: 'azurerm'
+              command: 'destroy'
+              workingDirectory: '$(workingDirectory)'
+              environmentServiceNameAzureRM: '$(serviceConnection)'
+              autoApprove: true
