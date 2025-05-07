@@ -70,6 +70,19 @@ stages:
               terraformVersion: 'latest'
 
           - task: TerraformTaskV4@4
+            displayName: 'Terraform Init (Validate)'
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              workingDirectory: '$(workingDirectory)'
+              backendServiceArm: '$(serviceConnection)'
+              backendAzureRmResourceGroupName: '$(backendResourceGroup)'
+              backendAzureRmStorageAccountName: '$(backendStorageAccount)'
+              backendAzureRmContainerName: '$(backendContainerName)'
+              backendAzureRmKey: '$(backendKey)'
+              backendAzureRmUseOIDC: true
+
+          - task: TerraformTaskV4@4
             displayName: 'Terraform Validate'
             inputs:
               provider: 'azurerm'
@@ -100,6 +113,19 @@ stages:
               terraformVersion: 'latest'
 
           - task: TerraformTaskV4@4
+            displayName: 'Terraform Init (Plan)'
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              workingDirectory: '$(workingDirectory)'
+              backendServiceArm: '$(serviceConnection)'
+              backendAzureRmResourceGroupName: '$(backendResourceGroup)'
+              backendAzureRmStorageAccountName: '$(backendStorageAccount)'
+              backendAzureRmContainerName: '$(backendContainerName)'
+              backendAzureRmKey: '$(backendKey)'
+              backendAzureRmUseOIDC: true
+
+          - task: TerraformTaskV4@4
             displayName: 'Terraform Plan'
             inputs:
               provider: 'azurerm'
@@ -109,93 +135,3 @@ stages:
               publishPlanResults: true
               planOutput: 'tfplan.out'
               varsFile: 'qa.tfvars'
-
-  - stage: Apply
-    displayName: 'Terraform Apply'
-    dependsOn: Plan
-    jobs:
-      - job: PreApplyApproval
-        displayName: '⏸ Await Apply Approval'
-        pool: server
-        steps:
-          - task: ManualValidation@0
-            displayName: 'Approve Apply to QA?'
-            inputs:
-              instructions: 'Please review the plan and approve deployment to QA.'
-              onTimeout: 'reject'
-              timeout: '1.00:00:00'
-
-      - job: Apply
-        displayName: 'Apply Job'
-        dependsOn: PreApplyApproval
-        pool:
-          vmImage: 'ubuntu-latest'
-        steps:
-          - checkout: self
-            persistCredentials: true
-
-          - script: |
-              echo "##vso[task.setvariable variable=ARM_USE_OIDC]true"
-              echo "##vso[task.setvariable variable=ARM_CLIENT_ID]$(servicePrincipalId)"
-              echo "##vso[task.setvariable variable=ARM_TENANT_ID]$(tenantId)"
-              echo "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID]$(subscriptionId)"
-            displayName: 'Set OIDC Auth Variables'
-
-          - task: TerraformInstaller@1
-            displayName: 'Install Terraform'
-            inputs:
-              terraformVersion: 'latest'
-
-          - task: TerraformTaskV4@4
-            displayName: 'Terraform Apply'
-            inputs:
-              provider: 'azurerm'
-              command: 'apply'
-              workingDirectory: '$(workingDirectory)'
-              environmentServiceNameAzureRM: '$(serviceConnection)'
-              planInput: 'tfplan.out'
-              autoApprove: true
-
-  - stage: Destroy
-    displayName: 'Terraform Destroy'
-    dependsOn: Apply
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-    jobs:
-      - job: PreDestroyApproval
-        displayName: '⏸ Await Destroy Approval'
-        pool: server
-        steps:
-          - task: ManualValidation@0
-            displayName: 'Approve Destroy of QA resources?'
-            inputs:
-              instructions: 'Confirm you want to tear down QA infra.'
-              onTimeout: 'reject'
-              timeout: '1.00:00:00'
-
-      - job: Destroy
-        displayName: 'Destroy Job'
-        dependsOn: PreDestroyApproval
-        steps:
-          - checkout: self
-            persistCredentials: true
-
-          - script: |
-              echo "##vso[task.setvariable variable=ARM_USE_OIDC]true"
-              echo "##vso[task.setvariable variable=ARM_CLIENT_ID]$(servicePrincipalId)"
-              echo "##vso[task.setvariable variable=ARM_TENANT_ID]$(tenantId)"
-              echo "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID]$(subscriptionId)"
-            displayName: 'Set OIDC Auth Variables'
-
-          - task: TerraformInstaller@1
-            displayName: 'Install Terraform'
-            inputs:
-              terraformVersion: 'latest'
-
-          - task: TerraformTaskV4@4
-            displayName: 'Terraform Destroy'
-            inputs:
-              provider: 'azurerm'
-              command: 'destroy'
-              workingDirectory: '$(workingDirectory)'
-              environmentServiceNameAzureRM: '$(serviceConnection)'
-              autoApprove: true
