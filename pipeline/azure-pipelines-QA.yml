@@ -5,7 +5,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  workingDirectory: 'dhdp-env/QA'
+  workingDirectory: 'env/QA'
   backendResourceGroup: 'dhdp-lab-resource-group'
   backendStorageAccount: 'dhdplabsa'
   backendContainerName: 'tfstate'
