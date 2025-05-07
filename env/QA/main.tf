@@ -132,6 +132,7 @@ module "aks" {
   network_plugin      = var.network_plugin
   dns_service_ip      = var.dns_service_ip
   service_cidr        = var.service_cidr
+  docker_bridge_cidr  = var.docker_bridge_cidr
   tags                = var.tags
 }
 
