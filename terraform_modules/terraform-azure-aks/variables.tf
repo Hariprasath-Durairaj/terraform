@@ -76,10 +76,7 @@ variable "service_cidr" {
   type        = string
 }
 
-variable "docker_bridge_cidr" {
-  description = "Docker bridge CIDR"
-  type        = string
-}
+
 
 variable "tags" {
   description = "Tags to apply to resources"
