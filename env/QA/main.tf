@@ -28,7 +28,7 @@ module "aks" {
   source              = "../../terraform_modules/terraform-azure-aks"
   name                = var.aks_name
   location            = var.location
-  resource_group_name = "dhdp-lab-resource-group"  # Change the resource group name here
+  resource_group_name = azurerm_resource_group.dhdp_qa_rg.name
   dns_prefix          = var.dns_prefix
   kubernetes_version  = var.kubernetes_version
   node_resource_group = var.node_resource_group
@@ -46,7 +46,7 @@ module "aks" {
   tags                = var.tags
 }
 
-# Kubernetes provider (added here)
+# Kubernetes provider using AKS kubeconfig output
 provider "kubernetes" {
   host                   = module.aks.kube_config[0].host
   client_certificate     = base64decode(module.aks.kube_config[0].client_certificate)
@@ -54,6 +54,16 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(module.aks.kube_config[0].cluster_ca_certificate)
 }
 
+# Public IP for NGINX Ingress
+module "public_ip_nginx" {
+  source              = "../../terraform_modules/terraform-azure-public-ip"
+  name                = var.public_ip_nginx_name
+  location            = var.location
+  resource_group_name = azurerm_resource_group.dhdp_qa_rg.name
+  tags                = var.tags
+}
+
+# Helm release for NGINX Ingress Controller with WAF
 resource "helm_release" "nginx_ingress" {
   name       = "nginx-ingress"
   namespace  = "kube-system"
@@ -77,6 +87,11 @@ resource "helm_release" "nginx_ingress" {
   }
 
   depends_on = [module.aks]
+}
+
+# Outputs
+output "public_ip_nginx" {
+  value = module.public_ip_nginx.public_ip_address
 }
 
 # Private DNS Zone
