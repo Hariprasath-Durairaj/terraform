@@ -9,13 +9,13 @@ tags = {
 }
 
 vnet_name     = "dhdp-qa-vnet"
-address_space = ["10.21.0.0/16"]
+address_space = ["10.31.0.0/16"]
 
 subnets = {
-  "aks-subnet"         = ["10.21.1.0/24"]
-  "appgw-subnet"       = ["10.21.64.0/24"]
-  "AzureBastionSubnet" = ["10.21.80.0/27"]
-  "webapp-subnet"      = ["10.21.96.0/24"]
+  "aks-subnet"         = ["10.31.1.0/24"]
+  "appgw-subnet"       = ["10.31.64.0/24"]
+  "AzureBastionSubnet" = ["10.31.80.0/27"]
+  "webapp-subnet"      = ["10.31.96.0/24"]
 }
 
 nsg_name = "dhdp-qa-nsg"
@@ -48,11 +48,11 @@ key_vault_name            = "dhdp-qa-kv"
 disk_encryption_set_name  = "dhdp-qa-des"
 key_vault_key_id          = "https://dhdp-qa-kv.vault.azure.net/keys/dhdp-qa-acr-cmk-key/d362cbd7f7e349ceaa138e143f608321"
 
-acr_name = "dhdpqaacr"
+acr_name = "dhdpqaacr1221"
 
 aks_name            = "dhdp-qa-aks"
 dns_prefix          = "dhdpqa"
-kubernetes_version  = "1.27.3"
+kubernetes_version  = "1.26.6"
 node_resource_group = "MC_dhdp-qa-resource-group_dhdp-qa-aks_canadacentral"
 
 default_node_pool = {
@@ -149,3 +149,5 @@ appgw_capacity      = 2
 appgw_frontend_port = 80
 appgw_backend_ips   = ["10.21.1.4", "10.21.1.5"]
 appgw_backend_port  = 8080
+
+key_vault_name = "dhdp-qa-kv-unique"
