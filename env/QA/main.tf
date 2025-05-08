@@ -2,11 +2,6 @@ provider "azurerm" {
   features {}
 }
 
-# Resource Group
-resource "azurerm_resource_group" "dhdp_laboratory" {
-  name     = "dhdp-lab-resource-group"  # Change the resource group name here
-  location = var.location
-}
 
 # Virtual Network
 module "vnet" {
