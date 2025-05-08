@@ -44,9 +44,9 @@ private_dns_link_name  = "acr-dns-link"
 vnet_peering_name      = "dhdp-qa-peering"
 remote_virtual_network_id = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-mgmt-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-mgmt-vnet"
 
-
-disk_encryption_set_name  = "dhdp-qa-des"
-key_vault_key_id          = "https://dhdp-qa-kv.vault.azure.net/keys/dhdp-qa-acr-cmk-key/d362cbd7f7e349ceaa138e143f608321"
+key_vault_name           = "dhdp-qa-kv-unique"
+disk_encryption_set_name = "dhdp-qa-des"
+key_vault_key_id         = "https://dhdp-qa-kv-unique.vault.azure.net/keys/dhdp-qa-acr-cmk-key/d362cbd7f7e349ceaa138e143f608321"
 
 acr_name = "dhdpqaacr1221"
 
@@ -147,7 +147,5 @@ appgw_sku           = "WAF_v2"
 appgw_sku_tier      = "WAF_v2"
 appgw_capacity      = 2
 appgw_frontend_port = 80
-appgw_backend_ips   = ["10.21.1.4", "10.21.1.5"]
+appgw_backend_ips   = ["10.31.1.4", "10.31.1.5"]
 appgw_backend_port  = 8080
-
-key_vault_name = "dhdp-qa-kv-unique"
