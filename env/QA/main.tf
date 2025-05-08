@@ -3,8 +3,8 @@ provider "azurerm" {
 }
 
 # Resource Group
-resource "azurerm_resource_group" "dhdp-lab-resource-group" {
-  name     = var.resource_group_name
+resource "azurerm_resource_group" "dhdp_laboratory" {
+  name     = "dhdp-lab-resource-group"  # Change the resource group name here
   location = var.location
 }
 
@@ -14,7 +14,7 @@ module "vnet" {
   vnet_name           = var.vnet_name
   address_space       = var.address_space
   location            = var.location
-  resource_group_name = azurerm_resource_group.dhdp_qa_rg.name
+  resource_group_name = "dhdp-lab-resource-group"  # Change the resource group name here
   subnets             = var.subnets
   tags                = var.tags
 }
@@ -24,9 +24,8 @@ module "public_ip_nginx" {
   source              = "../../terraform_modules/terraform-azure-public-ip"
   name                = var.public_ip_nginx_name
   location            = var.location
-  resource_group_name = azurerm_resource_group.dhdp_qa_rg.name
+  resource_group_name = "dhdp-lab-resource-group"  # Change the resource group name here
   tags                = var.tags
-  
 }
 
 # AKS Cluster
@@ -34,7 +33,7 @@ module "aks" {
   source              = "../../terraform_modules/terraform-azure-aks"
   name                = var.aks_name
   location            = var.location
-  resource_group_name = azurerm_resource_group.dhdp_qa_rg.name
+  resource_group_name = "dhdp-lab-resource-group"  # Change the resource group name here
   dns_prefix          = var.dns_prefix
   kubernetes_version  = var.kubernetes_version
   node_resource_group = var.node_resource_group
@@ -82,7 +81,7 @@ resource "helm_release" "nginx_ingress" {
 module "private_dns" {
   source                = "../../terraform_modules/terraform-azure-private-dns"
   name                  = var.private_dns_name
-  resource_group_name   = azurerm_resource_group.dhdp_qa_rg.name
+  resource_group_name   = "dhdp-lab-resource-group"  # Change the resource group name here
   link_name             = var.private_dns_link_name
   virtual_network_id    = module.vnet.vnet_id
   registration_enabled  = false
@@ -94,7 +93,7 @@ module "key_vault" {
   source              = "../../terraform_modules/terraform-azure-key-vault"
   name                = var.key_vault_name
   location            = var.location
-  resource_group_name = azurerm_resource_group.dhdp_qa_rg.name
+  resource_group_name = "dhdp-lab-resource-group"  # Change the resource group name here
   tenant_id           = var.tenant_id
   tags                = var.tags
 }
@@ -104,7 +103,7 @@ module "acr" {
   source              = "../../terraform_modules/terraform-azure-acr"
   name                = var.acr_name
   location            = var.location
-  resource_group_name = azurerm_resource_group.dhdp_qa_rg.name
+  resource_group_name = "dhdp-lab-resource-group"  # Change the resource group name here
   tags                = var.tags
 }
 
@@ -113,7 +112,7 @@ module "log_analytics" {
   source              = "../../terraform_modules/terraform-azure-log-analytics"
   name                = var.log_analytics_name
   location            = var.location
-  resource_group_name = azurerm_resource_group.dhdp_qa_rg.name
+  resource_group_name = "dhdp-lab-resource-group"  # Change the resource group name here
   retention_in_days   = var.log_retention
   tags                = var.tags
 }
