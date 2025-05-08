@@ -180,3 +180,24 @@ variable "log_retention" {
   description = "Log retention in days"
   type        = number
 }
+
+variable "default_node_pool" {
+  description = "The default node pool configuration"
+  type = map(object({
+    name                = string
+    vm_size             = string
+    enable_auto_scaling = bool
+    min_count           = number
+    max_count           = number
+    max_pods            = number
+    os_disk_size_gb     = number
+    type                = string
+    node_labels         = map(string)
+    tags                = map(string)
+    vnet_subnet_id      = string
+  }))
+}
+variable "public_ip_bastion_name" {
+  description = "The name of the public IP for Bastion"
+  type        = string
+}
