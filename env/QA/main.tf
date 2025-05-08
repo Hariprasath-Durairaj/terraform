@@ -1,12 +1,8 @@
-# ------------------------
-# DHDP QA Environment Modules
-# ------------------------
-
 provider "azurerm" {
   features {}
 }
 
-# Network
+# VNet
 module "vnet" {
   source              = "../../terraform_modules/terraform-azure-network"
   vnet_name           = var.vnet_name
@@ -17,6 +13,7 @@ module "vnet" {
   tags                = var.tags
 }
 
+# NSG
 module "nsg" {
   source              = "../../terraform_modules/terraform-azure-nsg"
   name                = var.nsg_name
@@ -54,7 +51,7 @@ module "nat_gateway" {
   tags                = var.tags
 }
 
-# Bastion Host
+# Bastion
 module "bastion" {
   source              = "../../terraform_modules/terraform-azure-bastion"
   name                = var.bastion_name
@@ -78,15 +75,15 @@ module "private_dns" {
 
 # VNet Peering
 module "vnet_peering" {
-  source                      = "../../terraform_modules/terraform-azure-vnet-peering"
-  name                        = var.vnet_peering_name
-  resource_group_name         = var.resource_group_name
-  virtual_network_name        = var.vnet_name
-  remote_virtual_network_id   = var.remote_virtual_network_id
-  allow_virtual_network_access = true
-  allow_forwarded_traffic      = false
-  allow_gateway_transit        = false
-  use_remote_gateways          = false
+  source                        = "../../terraform_modules/terraform-azure-vnet-peering"
+  name                          = var.vnet_peering_name
+  resource_group_name           = var.resource_group_name
+  virtual_network_name          = var.vnet_name
+  remote_virtual_network_id     = var.remote_virtual_network_id
+  allow_virtual_network_access  = true
+  allow_forwarded_traffic       = false
+  allow_gateway_transit         = false
+  use_remote_gateways           = false
 }
 
 # Key Vault
@@ -127,12 +124,20 @@ module "aks" {
   dns_prefix          = var.dns_prefix
   kubernetes_version  = var.kubernetes_version
   node_resource_group = var.node_resource_group
-  default_node_pool   = var.default_node_pool
-  user_node_pools     = var.user_node_pools
+  default_node_pool   = merge(var.default_node_pool, {
+    vnet_subnet_id = module.vnet.subnet_ids["aks-subnet"]
+  })
+  user_node_pools     = {
+    for k, v in var.user_node_pools : k => merge(v, {
+      vnet_subnet_id = module.vnet.subnet_ids["aks-subnet"]
+    })
+  }
   network_plugin      = var.network_plugin
   dns_service_ip      = var.dns_service_ip
   service_cidr        = var.service_cidr
   tags                = var.tags
+
+  depends_on = [module.vnet]
 }
 
 # Log Analytics
@@ -145,7 +150,7 @@ module "log_analytics" {
   tags                = var.tags
 }
 
-# Backup Vault
+# Backup
 module "backup" {
   source              = "../../terraform_modules/terraform-azure-backup"
   name                = var.backup_vault_name
@@ -180,5 +185,6 @@ module "app_gateway" {
   frontend_port         = var.appgw_frontend_port
   backend_ip_addresses  = var.appgw_backend_ips
   backend_port          = var.appgw_backend_port
+  request_routing_priority = 100
   tags                  = var.tags
 }
