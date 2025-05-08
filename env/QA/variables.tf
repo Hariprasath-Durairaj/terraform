@@ -139,10 +139,7 @@ variable "node_resource_group" {
   type        = string
 }
 
-variable "default_node_pool" {
-  description = "Default node pool configuration"
-  type        = map(any)
-}
+
 
 variable "user_node_pools" {
   description = "User node pools for AKS"
