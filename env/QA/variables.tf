@@ -1,3 +1,5 @@
+# Declare input variables
+
 variable "location" {
   description = "Azure region for resources"
   type        = string
@@ -86,4 +88,36 @@ variable "docker_bridge_cidr" {
 variable "log_retention" {
   description = "Log retention in days"
   type        = number
+}
+
+# Declare missing variables that were referenced in main.tf
+
+variable "aks_name" {
+  description = "Name of the AKS cluster"
+  type        = string
+}
+
+variable "private_dns_name" {
+  description = "Name of the private DNS zone"
+  type        = string
+}
+
+variable "private_dns_link_name" {
+  description = "Name of the private DNS link"
+  type        = string
+}
+
+variable "key_vault_name" {
+  description = "Name of the Azure Key Vault"
+  type        = string
+}
+
+variable "acr_name" {
+  description = "Name of the Azure Container Registry (ACR)"
+  type        = string
+}
+
+variable "log_analytics_name" {
+  description = "Name of the Log Analytics workspace"
+  type        = string
 }
