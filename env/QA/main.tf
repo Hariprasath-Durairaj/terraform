@@ -46,7 +46,6 @@ module "aks" {
   tags                = var.tags
 }
 
-# Helm release for NGINX Ingress Controller with WAF
 resource "helm_release" "nginx_ingress" {
   name       = "nginx-ingress"
   namespace  = "kube-system"
