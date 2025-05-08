@@ -122,6 +122,8 @@ variable "log_analytics_name" {
   type        = string
 }
 
+# Declare missing variables from terraform.tfvars
+
 variable "key_vault_key_id" {
   description = "Key Vault Key ID"
   type        = string
@@ -132,3 +134,4 @@ variable "remote_virtual_network_id" {
   type        = string
 }
 
+# Add any additional variables that you referenced in your terraform.tfvars
