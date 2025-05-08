@@ -121,3 +121,14 @@ variable "log_analytics_name" {
   description = "Name of the Log Analytics workspace"
   type        = string
 }
+
+variable "key_vault_key_id" {
+  description = "Key Vault Key ID"
+  type        = string
+}
+
+variable "remote_virtual_network_id" {
+  description = "ID of the remote virtual network"
+  type        = string
+}
+
