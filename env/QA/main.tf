@@ -185,6 +185,5 @@ module "app_gateway" {
   frontend_port         = var.appgw_frontend_port
   backend_ip_addresses  = var.appgw_backend_ips
   backend_port          = var.appgw_backend_port
-  request_routing_priority = 100
   tags                  = var.tags
 }
