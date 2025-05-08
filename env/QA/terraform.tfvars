@@ -66,7 +66,7 @@ acr_name = "dhdpqaacr1221"
 # AKS Cluster Configuration
 aks_name            = "dhdp-qa-aks"
 dns_prefix          = "dhdpqa"
-kubernetes_version  = "1.26.6"
+kubernetes_version  = "1.32.3"
 node_resource_group = "MC_dhdp-qa-resource-group_dhdp-qa-aks_canadacentral"
 
 # Default Node Pool Configuration
