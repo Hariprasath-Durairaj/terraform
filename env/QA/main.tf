@@ -1,15 +1,13 @@
 provider "azurerm" {
   features {}
 }
-
-
 # Virtual Network
 module "vnet" {
   source              = "../../terraform_modules/terraform-azure-network"
   vnet_name           = var.vnet_name
   address_space       = var.address_space
   location            = var.location
-  resource_group_name = "dhdp-lab-resource-group"  # Change the resource group name here
+  resource_group_name = "dhdp-lab-resource-group"  # Static name for resource group
   subnets             = var.subnets
   tags                = var.tags
 }
@@ -19,7 +17,7 @@ module "public_ip_nginx" {
   source              = "../../terraform_modules/terraform-azure-public-ip"
   name                = var.public_ip_nginx_name
   location            = var.location
-  resource_group_name = "dhdp-lab-resource-group"  # Change the resource group name here
+  resource_group_name = "dhdp-lab-resource-group"  # Static name for resource group
   tags                = var.tags
 }
 
@@ -28,7 +26,7 @@ module "aks" {
   source              = "../../terraform_modules/terraform-azure-aks"
   name                = var.aks_name
   location            = var.location
-  resource_group_name = azurerm_resource_group.dhdp_qa_rg.name
+  resource_group_name = "dhdp-lab-resource-group"  # Static name for resource group
   dns_prefix          = var.dns_prefix
   kubernetes_version  = var.kubernetes_version
   node_resource_group = var.node_resource_group
@@ -52,15 +50,6 @@ provider "kubernetes" {
   client_certificate     = base64decode(module.aks.kube_config[0].client_certificate)
   client_key             = base64decode(module.aks.kube_config[0].client_key)
   cluster_ca_certificate = base64decode(module.aks.kube_config[0].cluster_ca_certificate)
-}
-
-# Public IP for NGINX Ingress
-module "public_ip_nginx" {
-  source              = "../../terraform_modules/terraform-azure-public-ip"
-  name                = var.public_ip_nginx_name
-  location            = var.location
-  resource_group_name = azurerm_resource_group.dhdp_qa_rg.name
-  tags                = var.tags
 }
 
 # Helm release for NGINX Ingress Controller with WAF
@@ -89,16 +78,11 @@ resource "helm_release" "nginx_ingress" {
   depends_on = [module.aks]
 }
 
-# Outputs
-output "public_ip_nginx" {
-  value = module.public_ip_nginx.public_ip_address
-}
-
 # Private DNS Zone
 module "private_dns" {
   source                = "../../terraform_modules/terraform-azure-private-dns"
   name                  = var.private_dns_name
-  resource_group_name   = "dhdp-lab-resource-group"  # Change the resource group name here
+  resource_group_name   = "dhdp-lab-resource-group"  # Static name for resource group
   link_name             = var.private_dns_link_name
   virtual_network_id    = module.vnet.vnet_id
   registration_enabled  = false
@@ -110,7 +94,7 @@ module "key_vault" {
   source              = "../../terraform_modules/terraform-azure-key-vault"
   name                = var.key_vault_name
   location            = var.location
-  resource_group_name = "dhdp-lab-resource-group"  # Change the resource group name here
+  resource_group_name = "dhdp-lab-resource-group"  # Static name for resource group
   tenant_id           = var.tenant_id
   tags                = var.tags
 }
@@ -120,7 +104,7 @@ module "acr" {
   source              = "../../terraform_modules/terraform-azure-acr"
   name                = var.acr_name
   location            = var.location
-  resource_group_name = "dhdp-lab-resource-group"  # Change the resource group name here
+  resource_group_name = "dhdp-lab-resource-group"  # Static name for resource group
   tags                = var.tags
 }
 
@@ -129,7 +113,7 @@ module "log_analytics" {
   source              = "../../terraform_modules/terraform-azure-log-analytics"
   name                = var.log_analytics_name
   location            = var.location
-  resource_group_name = "dhdp-lab-resource-group"  # Change the resource group name here
+  resource_group_name = "dhdp-lab-resource-group"  # Static name for resource group
   retention_in_days   = var.log_retention
   tags                = var.tags
 }
