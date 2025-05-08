@@ -77,12 +77,13 @@ default_node_pool = {
   min_count           = 1
   max_count           = 3
   max_pods            = 110
-  os_disk_size_gb     = 50
+  os_disk_size_gb     = 50   # Correct number value here
   type                = "System"
   node_labels         = { type = "system" }
   tags                = {}
   vnet_subnet_id      = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-lab-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-qa-vnet/subnets/aks-subnet"
 }
+
 
 
 # User Node Pools Configuration
