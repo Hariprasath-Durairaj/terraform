@@ -26,7 +26,7 @@ module "public_ip_nginx" {
   location            = var.location
   resource_group_name = azurerm_resource_group.dhdp_qa_rg.name
   tags                = var.tags
-  provider            = azurerm
+  
 }
 
 # AKS Cluster
