@@ -1,3 +1,4 @@
+# General Variables
 location            = "canadacentral"
 resource_group_name = "dhdp-lab-resource-group"
 tenant_id           = "c25c5028-2135-4990-9b82-d8c62774306a"
@@ -8,6 +9,7 @@ tags = {
   ManagedBy   = "Terraform"
 }
 
+# Virtual Network (VNet)
 vnet_name     = "dhdp-qa-vnet"
 address_space = ["10.31.0.0/16"]
 
@@ -18,6 +20,7 @@ subnets = {
   "webapp-subnet"      = ["10.31.96.0/24"]
 }
 
+# Network Security Group (NSG)
 nsg_name = "dhdp-qa-nsg"
 
 security_rules = {
@@ -34,27 +37,39 @@ security_rules = {
   }
 }
 
-public_ip_appgw_name   = "dhdp-qa-appgw-pip"
+# Public IPs (for NGINX Ingress)
+public_ip_nginx_name   = "dhdp-qa-nginx-ingress-pip"
 public_ip_bastion_name = "dhdp-qa-bastion-pip"
-nat_gateway_name       = "dhdp-qa-natgw"
-bastion_name           = "dhdp-qa-bastion"
 
-private_dns_name       = "privatelink.azurecr.io"
-private_dns_link_name  = "acr-dns-link"
-vnet_peering_name      = "dhdp-qa-peering"
-remote_virtual_network_id = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-mgmt-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-mgmt-vnet"
+# NAT Gateway
+nat_gateway_name = "dhdp-qa-natgw"
 
+# Bastion
+bastion_name = "dhdp-qa-bastion"
+
+# Private DNS
+private_dns_name      = "privatelink.azurecr.io"
+private_dns_link_name = "acr-dns-link"
+
+# VNet Peering
+vnet_peering_name           = "dhdp-qa-peering"
+remote_virtual_network_id    = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-mgmt-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-mgmt-vnet"
+
+# Key Vault and Encryption
 key_vault_name           = "dhdp-qa-kv-unique"
 disk_encryption_set_name = "dhdp-qa-des"
 key_vault_key_id         = "https://dhdp-qa-kv-unique.vault.azure.net/keys/dhdp-qa-acr-cmk-key/d362cbd7f7e349ceaa138e143f608321"
 
+# Azure Container Registry (ACR)
 acr_name = "dhdpqaacr1221"
 
+# AKS Cluster Configuration
 aks_name            = "dhdp-qa-aks"
 dns_prefix          = "dhdpqa"
 kubernetes_version  = "1.26.6"
 node_resource_group = "MC_dhdp-qa-resource-group_dhdp-qa-aks_canadacentral"
 
+# Default Node Pool Configuration
 default_node_pool = {
   name                = "system"
   vm_size             = "Standard_DS2_v2"
@@ -69,6 +84,7 @@ default_node_pool = {
   vnet_subnet_id      = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-lab-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-qa-vnet/subnets/aks-subnet"
 }
 
+# User Node Pools Configuration
 user_node_pools = {
   bitnobi = {
     name            = "bitnobi"
@@ -127,25 +143,24 @@ user_node_pools = {
   }
 }
 
+# Network Plugin and Service CIDR for AKS
 network_plugin     = "azure"
 dns_service_ip     = "10.2.0.10"
 service_cidr       = "10.2.0.0/24"
 docker_bridge_cidr = "172.17.0.1/16"
 
+# Log Analytics
 log_analytics_name = "dhdp-qa-log"
 log_retention      = 30
 
+# Backup Vault
 backup_vault_name = "dhdp-qa-backup"
 
+# WAF (Web Application Firewall) Configuration
 waf_name      = "dhdp-qa-waf"
 waf_mode      = "Prevention"
 owasp_version = "3.2"
 custom_rules  = []
 
-app_gateway_name    = "dhdp-qa-appgw"
-appgw_sku           = "WAF_v2"
-appgw_sku_tier      = "WAF_v2"
-appgw_capacity      = 2
-appgw_frontend_port = 80
-appgw_backend_ips   = ["10.31.1.4", "10.31.1.5"]
-appgw_backend_port  = 8080
+# NGINX Ingress (without App Gateway)
+public_ip_nginx_name = "dhdp-qa-nginx-ingress-pip"
