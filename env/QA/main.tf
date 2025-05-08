@@ -10,7 +10,7 @@ resource "azurerm_resource_group" "dhdp_qa_rg" {
 
 # Virtual Network
 module "vnet" {
-  source              = "../../terraform_modules/terraform-azure-network"  # Ensure this path is correct
+  source              = "../../terraform_modules/terraform-azure-network"
   vnet_name           = var.vnet_name
   address_space       = var.address_space
   location            = var.location
@@ -21,7 +21,7 @@ module "vnet" {
 
 # Public IP for NGINX Ingress
 module "public_ip_nginx" {
-  source              = "../../terraform_modules/terraform-azure-public-ip"  # Ensure this path is correct
+  source              = "../../terraform_modules/terraform-azure-public-ip"
   name                = var.public_ip_nginx_name
   location            = var.location
   resource_group_name = azurerm_resource_group.dhdp_qa_rg.name
@@ -30,7 +30,7 @@ module "public_ip_nginx" {
 
 # AKS Cluster
 module "aks" {
-  source              = "../../terraform_modules/terraform-azure-aks"  # Ensure this path is correct
+  source              = "../../terraform_modules/terraform-azure-aks"
   name                = var.aks_name
   location            = var.location
   resource_group_name = azurerm_resource_group.dhdp_qa_rg.name
@@ -79,7 +79,7 @@ resource "helm_release" "nginx_ingress" {
 
 # Private DNS Zone
 module "private_dns" {
-  source                = "../../terraform_modules/terraform-azure-private-dns"  # Ensure this path is correct
+  source                = "../../terraform_modules/terraform-azure-private-dns"
   name                  = var.private_dns_name
   resource_group_name   = azurerm_resource_group.dhdp_qa_rg.name
   link_name             = var.private_dns_link_name
@@ -90,7 +90,7 @@ module "private_dns" {
 
 # Key Vault
 module "key_vault" {
-  source              = "../../terraform_modules/terraform-azure-key-vault"  # Ensure this path is correct
+  source              = "../../terraform_modules/terraform-azure-key-vault"
   name                = var.key_vault_name
   location            = var.location
   resource_group_name = azurerm_resource_group.dhdp_qa_rg.name
@@ -100,7 +100,7 @@ module "key_vault" {
 
 # ACR
 module "acr" {
-  source              = "../../terraform_modules/terraform-azure-acr"  # Ensure this path is correct
+  source              = "../../terraform_modules/terraform-azure-acr"
   name                = var.acr_name
   location            = var.location
   resource_group_name = azurerm_resource_group.dhdp_qa_rg.name
@@ -109,7 +109,7 @@ module "acr" {
 
 # Log Analytics Workspace
 module "log_analytics" {
-  source              = "../../terraform_modules/terraform-azure-log-analytics"  # Ensure this path is correct
+  source              = "../../terraform_modules/terraform-azure-log-analytics"
   name                = var.log_analytics_name
   location            = var.location
   resource_group_name = azurerm_resource_group.dhdp_qa_rg.name
@@ -137,5 +137,3 @@ output "log_analytics_workspace_id" {
 output "nginx_ingress_controller_id" {
   value = helm_release.nginx_ingress.id
 }
-
-# Add any other relevant outputs for your environment
