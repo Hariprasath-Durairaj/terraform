@@ -1,13 +1,6 @@
 provider "azurerm" {
   features {}
 }
-
-# Resource Group
-resource "azurerm_resource_group" "dhdp_qa_rg" {
-  name     = var.resource_group_name
-  location = var.location
-}
-
 # Virtual Network
 module "vnet" {
   source              = "../../terraform_modules/terraform-azure-network"
