@@ -6,7 +6,7 @@ pool:
 
 variables:
   workingDirectory: 'env/QA'
-  serviceConnection: 'dhdp-infra-sc'
+  serviceConnection: 'dhdp-infra-sp'
   backendResourceGroup: 'dhdp-lab-resource-group'
   backendStorageAccount: 'dhdplabsa'
   backendContainerName: 'tfstate'
