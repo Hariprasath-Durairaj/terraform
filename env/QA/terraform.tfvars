@@ -107,39 +107,6 @@ user_node_pools = {
     node_labels     = { app = "candig" }
     vnet_subnet_id  = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-lab-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-qa-vnet/subnets/aks-subnet"
     tags            = { app = "candig" }
-  },
-  keycloak = {
-    name            = "keycloak"
-    vm_size         = "Standard_DS2_v2"
-    os_disk_size_gb = 50
-    node_count      = 1
-    max_pods        = 110
-    mode            = "User"
-    node_labels     = { app = "keycloak" }
-    vnet_subnet_id  = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-lab-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-qa-vnet/subnets/aks-subnet"
-    tags            = { app = "keycloak" }
-  },
-  integrateai = {
-    name            = "integrateai"
-    vm_size         = "Standard_DS2_v2"
-    os_disk_size_gb = 50
-    node_count      = 1
-    max_pods        = 110
-    mode            = "User"
-    node_labels     = { app = "integrateai" }
-    vnet_subnet_id  = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-lab-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-qa-vnet/subnets/aks-subnet"
-    tags            = { app = "integrateai" }
-  },
-  webapp = {
-    name            = "webapp"
-    vm_size         = "Standard_DS2_v2"
-    os_disk_size_gb = 50
-    node_count      = 1
-    max_pods        = 110
-    mode            = "User"
-    node_labels     = { app = "webapp" }
-    vnet_subnet_id  = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-lab-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-qa-vnet/subnets/webapp-subnet"
-    tags            = { app = "webapp" }
   }
 }
 
@@ -152,15 +119,3 @@ docker_bridge_cidr = "172.17.0.1/16"
 # Log Analytics
 log_analytics_name = "dhdp-qa-log"
 log_retention      = 30
-
-# Backup Vault
-backup_vault_name = "dhdp-qa-backup"
-
-# WAF (Web Application Firewall) Configuration
-waf_name      = "dhdp-qa-waf"
-waf_mode      = "Prevention"
-owasp_version = "3.2"
-custom_rules  = []
-
-# NGINX Ingress (without App Gateway)
-public_ip_nginx_name = "dhdp-qa-nginx-ingress-pip"
