@@ -76,7 +76,7 @@ default_node_pool = {
   enable_auto_scaling = true
   min_count           = 1
   max_count           = 3
-  max_pods            = 110
+  max_pods            = 30
   os_disk_size_gb     = 50   # Correct number value here
   type                = "System"
   node_labels         = { type = "system" }
@@ -89,28 +89,81 @@ default_node_pool = {
 # User Node Pools Configuration
 user_node_pools = {
   bitnobi = {
-    name            = "bitnobi"
-    vm_size         = "Standard_DS2_v2"
-    os_disk_size_gb = 50
-    node_count      = 1
-    max_pods        = 110
-    mode            = "User"
-    node_labels     = { app = "bitnobi" }
-    vnet_subnet_id  = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-lab-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-qa-vnet/subnets/aks-subnet"
-    tags            = { app = "bitnobi" }
+    name                = "bitnobi"
+    vm_size             = "Standard_DS3_v2"
+    os_disk_size_gb     = 100
+    enable_auto_scaling = true
+    min_count           = 1
+    max_count           = 3
+    max_pods            = 60
+    mode                = "User"
+    node_labels         = { app = "bitnobi" }
+    vnet_subnet_id      = var.aks_subnet_id
+    tags                = { app = "bitnobi" }
+    taints              = ["app=bitnobi:NoSchedule"]
   },
+
   candig = {
-    name            = "candig"
-    vm_size         = "Standard_DS2_v2"
-    os_disk_size_gb = 50
-    node_count      = 1
-    max_pods        = 110
-    mode            = "User"
-    node_labels     = { app = "candig" }
-    vnet_subnet_id  = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-lab-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-qa-vnet/subnets/aks-subnet"
-    tags            = { app = "candig" }
+    name                = "candig"
+    vm_size             = "Standard_DS2_v3"
+    os_disk_size_gb     = 50
+    enable_auto_scaling = true
+    min_count           = 1
+    max_count           = 3
+    max_pods            = 30
+    mode                = "User"
+    node_labels         = { app = "candig" }
+    vnet_subnet_id      = var.aks_subnet_id
+    tags                = { app = "candig" }
+    taints              = ["app=candig:NoSchedule"]
+  },
+
+  keycloak = {
+    name                = "keycloak"
+    vm_size             = "Standard_DS2_v3"
+    os_disk_size_gb     = 50
+    enable_auto_scaling = true
+    min_count           = 1
+    max_count           = 2
+    max_pods            = 30
+    mode                = "User"
+    node_labels         = { app = "keycloak" }
+    vnet_subnet_id      = var.aks_subnet_id
+    tags                = { app = "keycloak" }
+    taints              = ["app=keycloak:NoSchedule"]
+  },
+
+  integrateai = {
+    name                = "integrateai"
+    vm_size             = "Standard_DS2_v3"
+    os_disk_size_gb     = 50
+    enable_auto_scaling = true
+    min_count           = 1
+    max_count           = 2
+    max_pods            = 30
+    mode                = "User"
+    node_labels         = { app = "integrateai" }
+    vnet_subnet_id      = var.aks_subnet_id
+    tags                = { app = "integrateai" }
+    taints              = ["app=integrateai:NoSchedule"]
+  },
+
+  webapp = {
+    name                = "webapp"
+    vm_size             = "Standard_DS2_v3"
+    os_disk_size_gb     = 50
+    enable_auto_scaling = true
+    min_count           = 1
+    max_count           = 2
+    max_pods            = 30
+    mode                = "User"
+    node_labels         = { app = "webapp" }
+    vnet_subnet_id      = var.aks_subnet_id
+    tags                = { app = "webapp" }
+    taints              = ["app=webapp:NoSchedule"]
   }
 }
+
 
 # Network Plugin and Service CIDR for AKS
 network_plugin     = "azure"
