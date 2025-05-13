@@ -13,6 +13,10 @@ variable "resource_group_name" {
   type        = string
 }
 
+variable "aks_subnet_id" {
+  description = "Shared subnet ID to assign to all node pools"
+  type        = string
+}
 variable "dns_prefix" {
   description = "DNS prefix for the AKS cluster"
   type        = string
