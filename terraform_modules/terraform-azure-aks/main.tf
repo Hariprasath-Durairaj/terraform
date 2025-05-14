@@ -15,7 +15,7 @@ resource "azurerm_kubernetes_cluster" "this" {
     max_pods            = var.default_node_pool.max_pods
     os_disk_size_gb     = var.default_node_pool.os_disk_size_gb
     node_labels         = var.default_node_pool.node_labels
-    vnet_subnet_id      = var.aks_subnet_id
+    vnet_subnet_id      = var.default_node_pool.vnet_subnet_id
     
     tags                = var.default_node_pool.tags
   }
