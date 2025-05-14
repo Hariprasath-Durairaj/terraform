@@ -76,6 +76,7 @@ default_node_pool = {
   enable_auto_scaling = true
   min_count           = 1
   max_count           = 3
+  node_count          = 1
   max_pods            = 30
   os_disk_size_gb     = 50   # Correct number value here
   type                = "System"
@@ -95,6 +96,7 @@ user_node_pools = {
     enable_auto_scaling = true
     min_count           = 1
     max_count           = 3
+    node_count          = 1
     max_pods            = 60
     mode                = "User"
     node_labels         = { app = "bitnobi" }
@@ -110,6 +112,7 @@ user_node_pools = {
     enable_auto_scaling = true
     min_count           = 1
     max_count           = 3
+    node_count          = 1
     max_pods            = 30
     mode                = "User"
     node_labels         = { app = "candig" }
@@ -125,6 +128,7 @@ user_node_pools = {
     enable_auto_scaling = true
     min_count           = 1
     max_count           = 2
+    node_count          = 1
     max_pods            = 30
     mode                = "User"
     node_labels         = { app = "keycloak" }
@@ -140,6 +144,7 @@ user_node_pools = {
     enable_auto_scaling = true
     min_count           = 1
     max_count           = 2
+    node_count          = 1
     max_pods            = 30
     mode                = "User"
     node_labels         = { app = "integrateai" }
@@ -155,6 +160,7 @@ user_node_pools = {
     enable_auto_scaling = true
     min_count           = 1
     max_count           = 2
+    node_count          = 1
     max_pods            = 30
     mode                = "User"
     node_labels         = { app = "webapp" }
