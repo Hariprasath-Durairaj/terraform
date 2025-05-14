@@ -55,6 +55,7 @@ provider "kubernetes" {
 
 
 
+
 # Create Kubernetes namespaces for each application
 resource "kubernetes_namespace" "bitnobi" {
   metadata {
