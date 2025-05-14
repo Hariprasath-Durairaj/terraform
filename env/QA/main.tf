@@ -32,7 +32,7 @@ module "aks" {
   node_resource_group = var.node_resource_group
   default_node_pool   = merge(var.default_node_pool, {
   vnet_subnet_id = module.vnet.subnet_ids["aks-subnet"]
-  temporary_name_for_rotation = "${var.default_node_pool.name}-temp"
+  temporary_name_for_rotation = "sysrotate01"
   })
   user_node_pools     = {
     for k, v in var.user_node_pools : k => merge(v, {
