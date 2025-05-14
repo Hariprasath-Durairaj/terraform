@@ -81,7 +81,6 @@ default_node_pool = {
   type                = "System"
   node_labels         = { type = "system" }
   tags                = {}
-  aks_subnet_id = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-lab-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-qa-vnet/subnets/aks-subnet"
   vnet_subnet_id      = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-lab-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-qa-vnet/subnets/aks-subnet"
 }
 
@@ -99,7 +98,7 @@ user_node_pools = {
     max_pods            = 60
     mode                = "User"
     node_labels         = { app = "bitnobi" }
-    vnet_subnet_id      = var.aks_subnet_id
+    vnet_subnet_id      = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-lab-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-qa-vnet/subnets/aks-subnet"
     tags                = { app = "bitnobi" }
     taints              = ["app=bitnobi:NoSchedule"]
   },
@@ -114,7 +113,7 @@ user_node_pools = {
     max_pods            = 30
     mode                = "User"
     node_labels         = { app = "candig" }
-    vnet_subnet_id      = var.aks_subnet_id
+    vnet_subnet_id      = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-lab-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-qa-vnet/subnets/aks-subnet"
     tags                = { app = "candig" }
     taints              = ["app=candig:NoSchedule"]
   },
@@ -129,7 +128,7 @@ user_node_pools = {
     max_pods            = 30
     mode                = "User"
     node_labels         = { app = "keycloak" }
-    vnet_subnet_id      = var.aks_subnet_id
+    vnet_subnet_id      = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-lab-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-qa-vnet/subnets/aks-subnet"
     tags                = { app = "keycloak" }
     taints              = ["app=keycloak:NoSchedule"]
   },
@@ -144,7 +143,7 @@ user_node_pools = {
     max_pods            = 30
     mode                = "User"
     node_labels         = { app = "integrateai" }
-    vnet_subnet_id      = var.aks_subnet_id
+    vnet_subnet_id      = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-lab-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-qa-vnet/subnets/aks-subnet"
     tags                = { app = "integrateai" }
     taints              = ["app=integrateai:NoSchedule"]
   },
@@ -159,7 +158,7 @@ user_node_pools = {
     max_pods            = 30
     mode                = "User"
     node_labels         = { app = "webapp" }
-    vnet_subnet_id      = var.aks_subnet_id
+    vnet_subnet_id      = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-lab-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-qa-vnet/subnets/aks-subnet"
     tags                = { app = "webapp" }
     taints              = ["app=webapp:NoSchedule"]
   }
