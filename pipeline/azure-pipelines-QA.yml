@@ -17,7 +17,6 @@ stages:
     displayName: 'Terraform Init'
     jobs:
       - job: Init
-        displayName: 'Init Job'
         steps:
           - checkout: self
             persistCredentials: true
@@ -53,7 +52,6 @@ stages:
     dependsOn: Init
     jobs:
       - job: Validate
-        displayName: 'Validate Job'
         steps:
           - checkout: self
             persistCredentials: true
@@ -98,7 +96,6 @@ stages:
     dependsOn: Validate
     jobs:
       - job: Plan
-        displayName: 'Plan Job'
         steps:
           - checkout: self
             persistCredentials: true
@@ -141,50 +138,95 @@ stages:
               varsFile: 'qa.tfvars'
               useTerraformVersion: 'latest'
 
-- stage: Destroy
-  displayName: 'Terraform Destroy'
-  dependsOn: Apply
-  condition: succeeded()
-  jobs:
-    - job: Destroy
-      displayName: 'Destroy Job'
-      steps:
-        - checkout: self
-          persistCredentials: true
+  - stage: Apply
+    displayName: 'Terraform Apply'
+    dependsOn: Plan
+    condition: succeeded()
+    jobs:
+      - job: Apply
+        steps:
+          - checkout: self
+            persistCredentials: true
 
-        - script: |
-            echo "##vso[task.setvariable variable=ARM_USE_OIDC]true"
-            echo "##vso[task.setvariable variable=ARM_CLIENT_ID]$(servicePrincipalId)"
-            echo "##vso[task.setvariable variable=ARM_TENANT_ID]$(tenantId)"
-            echo "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID]$(subscriptionId)"
-          displayName: 'Set OIDC Auth Variables'
+          - script: |
+              echo "##vso[task.setvariable variable=ARM_USE_OIDC]true"
+              echo "##vso[task.setvariable variable=ARM_CLIENT_ID]$(servicePrincipalId)"
+              echo "##vso[task.setvariable variable=ARM_TENANT_ID]$(tenantId)"
+              echo "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID]$(subscriptionId)"
+            displayName: 'Set OIDC Auth Variables'
 
-        - task: TerraformInstaller@1
-          displayName: 'Install Terraform'
-          inputs:
-            terraformVersion: 'latest'
+          - task: TerraformInstaller@1
+            displayName: 'Install Terraform'
+            inputs:
+              terraformVersion: 'latest'
 
-        - task: TerraformTaskV4@4
-          displayName: 'Terraform Init (Destroy)'
-          inputs:
-            provider: 'azurerm'
-            command: 'init'
-            workingDirectory: '$(workingDirectory)'
-            backendServiceArm: '$(serviceConnection)'
-            backendAzureRmResourceGroupName: '$(backendResourceGroup)'
-            backendAzureRmStorageAccountName: '$(backendStorageAccount)'
-            backendAzureRmContainerName: '$(backendContainerName)'
-            backendAzureRmKey: '$(backendKey)'
-            backendAzureRmUseOIDC: true
-            useTerraformVersion: 'latest'
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Init (Apply)'
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              workingDirectory: '$(workingDirectory)'
+              backendServiceArm: '$(serviceConnection)'
+              backendAzureRmResourceGroupName: '$(backendResourceGroup)'
+              backendAzureRmStorageAccountName: '$(backendStorageAccount)'
+              backendAzureRmContainerName: '$(backendContainerName)'
+              backendAzureRmKey: '$(backendKey)'
+              backendAzureRmUseOIDC: true
+              useTerraformVersion: 'latest'
 
-        - task: TerraformTaskV4@4
-          displayName: 'Terraform Destroy'
-          inputs:
-            provider: 'azurerm'
-            command: 'destroy'
-            workingDirectory: '$(workingDirectory)'
-            environmentServiceNameAzureRM: '$(serviceConnection)'
-            autoApprove: true
-            useTerraformVersion: 'latest'
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Apply'
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              workingDirectory: '$(workingDirectory)'
+              environmentServiceNameAzureRM: '$(serviceConnection)'
+              planInput: 'tfplan.out'
+              autoApprove: true
+              useTerraformVersion: 'latest'
 
+  - stage: Destroy
+    displayName: 'Terraform Destroy'
+    dependsOn: Apply
+    condition: succeeded()
+    jobs:
+      - job: Destroy
+        steps:
+          - checkout: self
+            persistCredentials: true
+
+          - script: |
+              echo "##vso[task.setvariable variable=ARM_USE_OIDC]true"
+              echo "##vso[task.setvariable variable=ARM_CLIENT_ID]$(servicePrincipalId)"
+              echo "##vso[task.setvariable variable=ARM_TENANT_ID]$(tenantId)"
+              echo "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID]$(subscriptionId)"
+            displayName: 'Set OIDC Auth Variables'
+
+          - task: TerraformInstaller@1
+            displayName: 'Install Terraform'
+            inputs:
+              terraformVersion: 'latest'
+
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Init (Destroy)'
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              workingDirectory: '$(workingDirectory)'
+              backendServiceArm: '$(serviceConnection)'
+              backendAzureRmResourceGroupName: '$(backendResourceGroup)'
+              backendAzureRmStorageAccountName: '$(backendStorageAccount)'
+              backendAzureRmContainerName: '$(backendContainerName)'
+              backendAzureRmKey: '$(backendKey)'
+              backendAzureRmUseOIDC: true
+              useTerraformVersion: 'latest'
+
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Destroy'
+            inputs:
+              provider: 'azurerm'
+              command: 'destroy'
+              workingDirectory: '$(workingDirectory)'
+              environmentServiceNameAzureRM: '$(serviceConnection)'
+              autoApprove: true
+              useTerraformVersion: 'latest'
