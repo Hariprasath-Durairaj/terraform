@@ -33,6 +33,7 @@ variable "default_node_pool" {
   type = object({
     name                = string
     vm_size             = string
+    temporary_name_for_rotation = string 
     enable_auto_scaling = bool
     min_count           = number
     max_count           = number
