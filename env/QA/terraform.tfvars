@@ -73,6 +73,7 @@ node_resource_group = "MC_dhdp-qa-resource-group_dhdp-qa-aks_canadacentral"
 default_node_pool = {
   name                = "system"
   vm_size             = "Standard_DS2_v2"
+  temporary_name_for_rotation = "system-temp"
   enable_auto_scaling = true
   min_count           = 1
   max_count           = 3
