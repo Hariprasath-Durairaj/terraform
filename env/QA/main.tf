@@ -53,6 +53,37 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(module.aks.kube_config[0].cluster_ca_certificate)
 }
 
+# Create Kubernetes namespaces for each application
+resource "kubernetes_namespace" "bitnobi" {
+  metadata {
+    name = "bitnobi"
+  }
+}
+
+resource "kubernetes_namespace" "candig" {
+  metadata {
+    name = "candig"
+  }
+}
+
+resource "kubernetes_namespace" "keycloak" {
+  metadata {
+    name = "keycloak"
+  }
+}
+
+resource "kubernetes_namespace" "integrateai" {
+  metadata {
+    name = "integrateai"
+  }
+}
+
+resource "kubernetes_namespace" "webapp" {
+  metadata {
+    name = "webapp"
+  }
+}
+
 # Helm release for NGINX Ingress Controller with WAF
 resource "helm_release" "nginx_ingress" {
   name       = "nginx-ingress"
