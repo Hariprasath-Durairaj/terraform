@@ -31,7 +31,8 @@ module "aks" {
   kubernetes_version  = var.kubernetes_version
   node_resource_group = var.node_resource_group
   default_node_pool   = merge(var.default_node_pool, {
-    vnet_subnet_id = module.vnet.subnet_ids["aks-subnet"]
+  vnet_subnet_id = module.vnet.subnet_ids["aks-subnet"]
+  temporary_name_for_rotation = "${var.default_node_pool.name}-temp"
   })
   user_node_pools     = {
     for k, v in var.user_node_pools : k => merge(v, {
