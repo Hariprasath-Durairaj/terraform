@@ -54,17 +54,15 @@ vnet_peering_name         = "dhdp-qa-peering"
 remote_virtual_network_id = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-mgmt-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-mgmt-vnet"
 
 # Key Vault & Encryption
-key_vault_name           = "dhdp-qa-kv-unique"
-disk_encryption_set_name = "dhdp-qa-des"
-des_name                 = "dhdp-qa-des"
-key_vault_key_id         = "https://dhdp-qa-kv-unique.vault.azure.net/keys/dhdp-qa-acr-cmk-key/d362cbd7f7e349ceaa138e143f608321"
+key_vault_name   = "dhdp-qa-kv-unique"
+des_name         = "dhdp-qa-des"
+key_vault_key_id = "https://dhdp-qa-kv-unique.vault.azure.net/keys/dhdp-qa-acr-cmk-key/d362cbd7f7e349ceaa138e143f608321"
 
 # Backup
 backup_vault_name = "dhdp-qa-backup-vault"
 
 # ACR
 acr_name = "dhdpqaacr1221"
-acr_id   = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-lab-resource-group/providers/Microsoft.ContainerRegistry/registries/dhdpqaacr1221"
 
 # AKS
 aks_name            = "dhdp-qa-aks"
@@ -85,7 +83,7 @@ default_node_pool = {
   type                        = "System"
   node_labels                 = { type = "system" }
   tags                        = {}
-  vnet_subnet_id              = "/subscriptions/accf2f42-1262-48a4-8ab5-980bdf8aa8b8/resourceGroups/dhdp-lab-resource-group/providers/Microsoft.Network/virtualNetworks/dhdp-qa-vnet/subnets/aks-subnet"
+  vnet_subnet_id              = ""  # Always empty here; set in main.tf
   availability_zones          = ["1", "2", "3"]
 }
 
@@ -101,12 +99,79 @@ user_node_pools = {
     max_pods            = 60
     mode                = "User"
     node_labels         = { app = "bitnobi" }
-    vnet_subnet_id      = default_node_pool.vnet_subnet_id
+    vnet_subnet_id      = ""  # Always empty in tfvars!
     tags                = { app = "bitnobi" }
     taints              = ["app=bitnobi:NoSchedule"]
     availability_zones  = ["1", "2", "3"]
   }
-  # Repeat for candig, keycloak, integrateai, webapp with similar structure and appropriate taints/labels
+
+  candig = {
+    name                = "candig"
+    vm_size             = "Standard_DS2_v3"
+    os_disk_size_gb     = 50
+    enable_auto_scaling = true
+    min_count           = 1
+    max_count           = 3
+    node_count          = 1
+    max_pods            = 30
+    mode                = "User"
+    node_labels         = { app = "candig" }
+    vnet_subnet_id      = ""
+    tags                = { app = "candig" }
+    taints              = ["app=candig:NoSchedule"]
+    availability_zones  = ["1", "2", "3"]
+  }
+
+  keycloak = {
+    name                = "keycloak"
+    vm_size             = "Standard_DS2_v3"
+    os_disk_size_gb     = 50
+    enable_auto_scaling = true
+    min_count           = 1
+    max_count           = 2
+    node_count          = 1
+    max_pods            = 30
+    mode                = "User"
+    node_labels         = { app = "keycloak" }
+    vnet_subnet_id      = ""
+    tags                = { app = "keycloak" }
+    taints              = ["app=keycloak:NoSchedule"]
+    availability_zones  = ["1", "2", "3"]
+  }
+
+  integrateai = {
+    name                = "integrateai"
+    vm_size             = "Standard_DS2_v3"
+    os_disk_size_gb     = 50
+    enable_auto_scaling = true
+    min_count           = 1
+    max_count           = 2
+    node_count          = 1
+    max_pods            = 30
+    mode                = "User"
+    node_labels         = { app = "integrateai" }
+    vnet_subnet_id      = ""
+    tags                = { app = "integrateai" }
+    taints              = ["app=integrateai:NoSchedule"]
+    availability_zones  = ["1", "2", "3"]
+  }
+
+  webapp = {
+    name                = "webapp"
+    vm_size             = "Standard_DS2_v3"
+    os_disk_size_gb     = 50
+    enable_auto_scaling = true
+    min_count           = 1
+    max_count           = 2
+    node_count          = 1
+    max_pods            = 30
+    mode                = "User"
+    node_labels         = { app = "webapp" }
+    vnet_subnet_id      = ""
+    tags                = { app = "webapp" }
+    taints              = ["app=webapp:NoSchedule"]
+    availability_zones  = ["1", "2", "3"]
+  }
 }
 
 # AKS Networking
@@ -116,8 +181,8 @@ service_cidr       = "10.2.0.0/24"
 docker_bridge_cidr = "172.17.0.1/16"
 
 # Monitoring and Security
-log_analytics_name               = "dhdp-qa-log"
-log_retention                    = 30
-enable_monitoring                = true
-private_cluster_enabled          = false
+log_analytics_name              = "dhdp-qa-log"
+log_retention                   = 30
+enable_monitoring               = true
+private_cluster_enabled         = false
 api_server_authorized_ip_ranges = []
