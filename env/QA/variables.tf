@@ -35,9 +35,14 @@ variable "subnets" {
   type        = map(list(string))
 }
 
-# Public IPs (for NGINX Ingress)
+# Public IPs
 variable "public_ip_nginx_name" {
   description = "Name of the public IP for NGINX Ingress"
+  type        = string
+}
+
+variable "public_ip_bastion_name" {
+  description = "The name of the public IP for Bastion"
   type        = string
 }
 
@@ -50,6 +55,21 @@ variable "nsg_name" {
 variable "security_rules" {
   description = "Security rules for the NSG"
   type        = map(object({
+    name                       = string
+    priority                   = number
+    direction                  = string
+    access                     = string
+    protocol                   = string
+    source_port_range          = string
+    destination_port_range     = string
+    source_address_prefix      = string
+    destination_address_prefix = string
+  }))
+}
+
+variable "nsg_security_rules" {
+  description = "List of NSG security rules"
+  type = list(object({
     name                       = string
     priority                   = number
     direction                  = string
@@ -107,6 +127,11 @@ variable "disk_encryption_set_name" {
   type        = string
 }
 
+variable "des_name" {
+  description = "Name of the Disk Encryption Set used in module"
+  type        = string
+}
+
 variable "key_vault_key_id" {
   description = "Key Vault Key ID"
   type        = string
@@ -115,6 +140,11 @@ variable "key_vault_key_id" {
 # Azure Container Registry (ACR)
 variable "acr_name" {
   description = "Name of the Azure Container Registry (ACR)"
+  type        = string
+}
+
+variable "acr_id" {
+  description = "ID of the Azure Container Registry"
   type        = string
 }
 
@@ -139,14 +169,32 @@ variable "node_resource_group" {
   type        = string
 }
 
-
+variable "default_node_pool" {
+  description = "The default node pool configuration for AKS"
+  type = object({
+    name                        = string
+    vm_size                     = string
+    enable_auto_scaling         = bool
+    node_count                  = number
+    min_count                   = number
+    max_count                   = number
+    max_pods                    = number
+    os_disk_size_gb             = number
+    type                        = string
+    node_labels                 = map(string)
+    tags                        = map(string)
+    vnet_subnet_id              = string
+    temporary_name_for_rotation = optional(string)
+    availability_zones          = optional(list(string))
+  })
+}
 
 variable "user_node_pools" {
   description = "User node pools for AKS"
   type        = map(any)
 }
 
-# Network Plugin and Service CIDR for AKS
+# AKS Network
 variable "network_plugin" {
   description = "Network plugin for AKS"
   type        = string
@@ -178,25 +226,8 @@ variable "log_retention" {
   type        = number
 }
 
-variable "default_node_pool" {
-  description = "The default node pool configuration for AKS"
-  type = object({
-    name                = string
-    vm_size             = string
-    enable_auto_scaling = bool
-    node_count          = number
-    min_count           = number
-    max_count           = number
-    max_pods            = number
-    os_disk_size_gb     = number  # Correct type for os_disk_size_gb
-    type                = string
-    node_labels         = map(string)
-    tags                = map(string)
-    vnet_subnet_id      = string
-  })
-}
-
-variable "public_ip_bastion_name" {
-  description = "The name of the public IP for Bastion"
+# Backup Vault
+variable "backup_vault_name" {
+  description = "Name of the Recovery Services Backup Vault"
   type        = string
 }
