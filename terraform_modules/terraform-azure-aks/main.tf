@@ -47,7 +47,7 @@ oms_agent {
 resource "azurerm_role_assignment" "aks_acr_pull" {
   scope                = var.acr_id
   role_definition_name = "AcrPull"
-  principal_id         = azurerm_kubernetes_cluster.this.kubelet_identity[0].object_id
+  principal_id = module.aks.kubelet_identity_object_id
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "user" {
