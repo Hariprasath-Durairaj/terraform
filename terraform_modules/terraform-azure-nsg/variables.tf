@@ -13,7 +13,7 @@ variable "resource_group_name" {
   type        = string
 }
 
-variable "security_rules" {
+variable "nsg_security_rules" {
   description = "Security rules for the NSG"
   type = list(object({
     name                       = string
@@ -27,7 +27,6 @@ variable "security_rules" {
     destination_address_prefix = string
   }))
 }
-
 variable "tags" {
   description = "Tags to apply to the NSG"
   type        = map(string)
