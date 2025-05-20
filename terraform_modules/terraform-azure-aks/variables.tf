@@ -13,6 +13,11 @@ variable "resource_group_name" {
   type        = string
 }
 
+variable "acr_id" {
+  description = "The Azure Container Registry resource ID to grant pull access to"
+  type        = string
+}
+
 variable "dns_prefix" {
   description = "DNS prefix for the AKS cluster"
   type        = string
