@@ -188,5 +188,5 @@ private_cluster_enabled         = false
 api_server_authorized_ip_ranges = []
 
 
-des_name           = "dhdp-qa-des"
+
 
