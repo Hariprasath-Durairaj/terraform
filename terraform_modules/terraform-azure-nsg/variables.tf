@@ -14,8 +14,8 @@ variable "resource_group_name" {
 }
 
 variable "security_rules" {
-  description = "List of security rules to apply"
-  type = map(object({
+  description = "Security rules for the NSG"
+  type = list(object({
     name                       = string
     priority                   = number
     direction                  = string
