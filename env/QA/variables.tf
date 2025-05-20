@@ -206,3 +206,9 @@ variable "backup_vault_name" {
   description = "Name of the Recovery Services Backup Vault"
   type        = string
 }
+
+variable "api_server_authorized_ip_ranges" {
+  description = "List of IPs allowed to access the AKS API server"
+  type        = list(string)
+  default     = []
+}
