@@ -31,39 +31,41 @@ variable "node_resource_group" {
 variable "default_node_pool" {
   description = "Configuration for the default node pool"
   type = object({
-    name                = string
-    vm_size             = string
+    name                        = string
+    vm_size                     = string
     temporary_name_for_rotation = string 
-    enable_auto_scaling = bool
-    min_count           = number
-    max_count           = number
-    max_pods            = number
-    os_disk_size_gb     = number
-    type                = string
-    node_labels         = map(string)
-    tags                = map(string)
-    vnet_subnet_id      = string
+    enable_auto_scaling         = bool
+    min_count                   = number
+    max_count                   = number
+    max_pods                    = number
+    os_disk_size_gb             = number
+    type                        = string
+    node_labels                 = map(string)
+    tags                        = map(string)
+    vnet_subnet_id              = string
+    availability_zones          = list(string)
   })
 }
 
 variable "user_node_pools" {
   description = "Map of additional named user node pools"
   type = map(object({
-    name            = string
-    vm_size         = string
-    os_disk_size_gb = number
-    node_count      = number
-    max_pods        = number
-    mode            = string
-    node_labels     = map(string)
-    vnet_subnet_id  = string
-    tags            = map(string)
+    name               = string
+    vm_size            = string
+    os_disk_size_gb    = number
+    node_count         = number
+    max_pods           = number
+    mode               = string
+    node_labels        = map(string)
+    vnet_subnet_id     = string
+    tags               = map(string)
+    availability_zones = list(string)
   }))
   default = {}
 }
 
 variable "network_plugin" {
-  description = "Network plugin to use"
+  description = "Network plugin to use (e.g., azure or kubenet)"
   type        = string
 }
 
@@ -77,7 +79,29 @@ variable "service_cidr" {
   type        = string
 }
 
+variable "private_cluster_enabled" {
+  description = "Enable private AKS cluster"
+  type        = bool
+  default     = false
+}
 
+variable "api_server_authorized_ip_ranges" {
+  description = "List of authorized IP ranges to access the API server"
+  type        = list(string)
+  default     = []
+}
+
+variable "enable_monitoring" {
+  description = "Enable Azure Monitor (Log Analytics integration)"
+  type        = bool
+  default     = false
+}
+
+variable "log_analytics_workspace_id" {
+  description = "Log Analytics Workspace ID"
+  type        = string
+  default     = null
+}
 
 variable "tags" {
   description = "Tags to apply to resources"
