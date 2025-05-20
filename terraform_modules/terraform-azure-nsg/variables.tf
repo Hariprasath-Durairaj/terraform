@@ -8,7 +8,7 @@ variable "resource_group_name" {
   type        = string
 }
 
-variable "name" {
+variable "nsg_name" {
   description = "Name of the Network Security Group"
   type        = string
 }
