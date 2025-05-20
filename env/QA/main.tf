@@ -150,6 +150,12 @@ module "acr" {
   tags                = var.tags
 }
 
+resource "azurerm_role_assignment" "aks_acr_pull" {
+  scope                = module.acr.acr_id
+  role_definition_name = "AcrPull"
+  principal_id         = module.aks.kubelet_identity[0].object_id
+}
+
 # Log Analytics Workspace
 module "log_analytics" {
   source              = "../../terraform_modules/terraform-azure-log-analytics"
