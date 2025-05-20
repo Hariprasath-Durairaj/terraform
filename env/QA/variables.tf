@@ -213,3 +213,9 @@ variable "api_server_authorized_ip_ranges" {
   default     = []
 }
 
+variable "private_cluster_enabled" {
+  description = "Whether the AKS cluster is private"
+  type        = bool
+  default     = false
+}
+
