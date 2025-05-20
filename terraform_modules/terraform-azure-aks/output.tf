@@ -3,6 +3,11 @@ output "aks_id" {
   value       = azurerm_kubernetes_cluster.this.id
 }
 
+output "aks_name" {
+  description = "Name of the AKS cluster"
+  value       = azurerm_kubernetes_cluster.this.name
+}
+
 output "kube_config_raw" {
   description = "Raw kubeconfig content (string)"
   value       = azurerm_kubernetes_cluster.this.kube_config_raw
@@ -43,4 +48,9 @@ output "cluster_ca_certificate" {
   description = "Kubernetes cluster CA certificate"
   value       = azurerm_kubernetes_cluster.this.kube_config[0].cluster_ca_certificate
   sensitive   = true
+}
+
+output "node_resource_group" {
+  description = "Resource group containing AKS-managed nodes"
+  value       = azurerm_kubernetes_cluster.this.node_resource_group
 }
