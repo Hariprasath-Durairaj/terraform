@@ -212,8 +212,4 @@ variable "api_server_authorized_ip_ranges" {
   type        = list(string)
   default     = []
 }
-variable "des_name" {
-  description = "Name of the Disk Encryption Set"
-  type        = string
-}
 
