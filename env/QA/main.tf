@@ -192,7 +192,7 @@ module "nsg" {
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = module.vnet.subnet_ids["aks-subnet"]
-  security_rules      = var.nsg_security_rules
+  nsg_security_rules  = var.nsg_security_rules 
   tags                = var.tags
 }
 
