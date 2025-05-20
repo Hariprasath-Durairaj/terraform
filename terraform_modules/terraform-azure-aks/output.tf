@@ -54,3 +54,7 @@ output "node_resource_group" {
   description = "Resource group containing AKS-managed nodes"
   value       = azurerm_kubernetes_cluster.this.node_resource_group
 }
+
+output "principal_id" {
+  value = azurerm_kubernetes_cluster.this.identity[0].principal_id
+}
