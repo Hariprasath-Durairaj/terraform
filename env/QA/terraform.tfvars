@@ -189,11 +189,4 @@ api_server_authorized_ip_ranges = []
 
 
 des_name           = "dhdp-qa-des"
-location           = "canadacentral"
-resource_group_name = "dhdp-lab-resource-group"
-key_vault_key_id   = "https://dhdp-qa-kv-unique.vault.azure.net/keys/dhdp-qa-acr-cmk-key/d362cbd7f7e349ceaa138e143f608321"
-tags = {
-  Environment = "QA"
-  Project     = "DHDP"
-  ManagedBy   = "Terraform"
-}
+
