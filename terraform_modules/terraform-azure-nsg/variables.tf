@@ -13,6 +13,11 @@ variable "resource_group_name" {
   type        = string
 }
 
+variable "nsg_name" {
+  description = "Name of the Network Security Group"
+  type        = string
+}
+
 variable "nsg_security_rules" {
   description = "Security rules for the NSG"
   type = list(object({
