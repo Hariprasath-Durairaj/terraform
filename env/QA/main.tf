@@ -72,12 +72,35 @@ provider "helm" {
   }
 }
 
-# Kubernetes Namespaces
-resource "kubernetes_namespace" "bitnobi"     { metadata { name = "bitnobi"     } }
-resource "kubernetes_namespace" "candig"      { metadata { name = "candig"      } }
-resource "kubernetes_namespace" "keycloak"    { metadata { name = "keycloak"    } }
-resource "kubernetes_namespace" "integrateai" { metadata { name = "integrateai" } }
-resource "kubernetes_namespace" "webapp"      { metadata { name = "webapp"      } }
+resource "kubernetes_namespace" "bitnobi" {
+  metadata {
+    name = "bitnobi"
+  }
+}
+
+resource "kubernetes_namespace" "candig" {
+  metadata {
+    name = "candig"
+  }
+}
+
+resource "kubernetes_namespace" "keycloak" {
+  metadata {
+    name = "keycloak"
+  }
+}
+
+resource "kubernetes_namespace" "integrateai" {
+  metadata {
+    name = "integrateai"
+  }
+}
+
+resource "kubernetes_namespace" "webapp" {
+  metadata {
+    name = "webapp"
+  }
+}
 
 # NGINX Ingress Controller via Helm
 resource "helm_release" "nginx_ingress" {
