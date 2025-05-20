@@ -188,7 +188,7 @@ module "disk_encryption_set" {
 # NSG
 module "nsg" {
   source              = "../../terraform_modules/terraform-azure-nsg"
-  name                = var.nsg_name
+  nsg_name            = var.nsg_name
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = module.vnet.subnet_ids["aks-subnet"]
