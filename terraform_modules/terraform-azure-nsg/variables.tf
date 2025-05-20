@@ -33,3 +33,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "subnet_id" {
+  description = "Optional subnet ID to associate this NSG with"
+  type        = string
+  default     = null
+}
