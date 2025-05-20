@@ -52,21 +52,6 @@ variable "nsg_name" {
   type        = string
 }
 
-variable "security_rules" {
-  description = "Security rules for the NSG"
-  type        = map(object({
-    name                       = string
-    priority                   = number
-    direction                  = string
-    access                     = string
-    protocol                   = string
-    source_port_range          = string
-    destination_port_range     = string
-    source_address_prefix      = string
-    destination_address_prefix = string
-  }))
-}
-
 variable "nsg_security_rules" {
   description = "List of NSG security rules"
   type = list(object({
@@ -122,13 +107,8 @@ variable "key_vault_name" {
   type        = string
 }
 
-variable "disk_encryption_set_name" {
-  description = "Name of the Disk Encryption Set"
-  type        = string
-}
-
 variable "des_name" {
-  description = "Name of the Disk Encryption Set used in module"
+  description = "Name of the Disk Encryption Set"
   type        = string
 }
 
@@ -140,11 +120,6 @@ variable "key_vault_key_id" {
 # Azure Container Registry (ACR)
 variable "acr_name" {
   description = "Name of the Azure Container Registry (ACR)"
-  type        = string
-}
-
-variable "acr_id" {
-  description = "ID of the Azure Container Registry"
   type        = string
 }
 
