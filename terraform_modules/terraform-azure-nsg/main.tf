@@ -23,8 +23,13 @@ resource "azurerm_network_security_group" "this" {
 
 
 # Optional: Associate NSG with a subnet if subnet_id is provided
-resource "azurerm_subnet_network_security_group_association" "this" {
-  count                     = var.subnet_id != null ? 1 : 0
-  subnet_id                 = var.subnet_id
-  network_security_group_id = azurerm_network_security_group.this.id
+locals {
+  nsg_association = var.subnet_id != null ? { "associate" = var.subnet_id } : {}
 }
+
+resource "azurerm_subnet_network_security_group_association" "this" {
+  for_each                   = local.nsg_association
+  subnet_id                  = each.value
+  network_security_group_id  = azurerm_network_security_group.this.id
+}
+
