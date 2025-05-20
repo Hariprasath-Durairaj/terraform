@@ -34,7 +34,9 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   private_cluster_enabled          = var.private_cluster_enabled
-  api_server_authorized_ip_ranges = var.api_server_authorized_ip_ranges
+  api_server_access_profile {
+  authorized_ip_ranges = var.api_server_authorized_ip_ranges
+}
 
 oms_agent {
   log_analytics_workspace_id = var.log_analytics_workspace_id
