@@ -219,3 +219,9 @@ variable "private_cluster_enabled" {
   default     = false
 }
 
+
+variable "enable_monitoring" {
+  description = "Enable monitoring (OMS agent) for AKS"
+  type        = bool
+  default     = true
+}
