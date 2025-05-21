@@ -188,5 +188,38 @@ private_cluster_enabled         = false
 api_server_authorized_ip_ranges = []
 
 
+module "app_gateway" {
+  source              = "../../terraform_modules/terraform-azure-app-gateway"
+  name                = "dhdp-qa-appgw"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+
+  # Use the dedicated subnet for App Gateway from your vnet module
+  subnet_id           = module.vnet.subnet_ids["appgw-subnet"]
+
+  # Public IP for the Application Gateway frontend
+  public_ip_id        = module.public_ip_nginx.public_ip_id
+
+  # Frontend port (HTTP 80 example)
+  frontend_port       = 80
+
+  # Backend IP addresses (replace with your actual AKS Ingress Controller/private service IPs)
+  backend_ip_addresses = ["10.31.1.4"]  # <-- Replace with your real backend IP(s) or output
+
+  # Backend HTTP settings
+  backend_port        = 80
+
+  # SKU for WAF v2
+  sku_name            = "WAF_v2"
+  sku_tier            = "WAF_v2"
+  capacity            = 2
+
+  # Attach your WAF policy here
+  firewall_policy_id  = module.waf_policy.id
+
+  tags                = var.tags
+}
+
+
 
 
