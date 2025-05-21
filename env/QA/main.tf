@@ -1,3 +1,7 @@
+provider "azurerm" {
+  features {}
+}
+
 # Virtual Network
 module "vnet" {
   source              = "../../terraform_modules/terraform-azure-network"
