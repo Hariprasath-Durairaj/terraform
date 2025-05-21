@@ -200,7 +200,7 @@ app_gateway_public_ip_name = "dhdp-qa-appgw-pip"  # If creating a dedicated one,
 app_gateway_frontend_port = 80
 
 # Backend IP addresses (update this with your actual AKS ingress controller/service IP)
-app_gateway_backend_ip_addresses = ["10.31.1.4"]
+app_gateway_backend_ip_addresses = ["10.31.96.4", "10.31.96.5"]
 
 # Backend port
 app_gateway_backend_port = 80
