@@ -218,10 +218,15 @@ module "app_gateway" {
   name                = var.app_gateway_name
   location            = var.location
   resource_group_name = var.resource_group_name
-  frontend_ip_config  = { ... }  # fill in with your config
-  backend_pools       = { ... }
-  waf_enabled         = true
-  firewall_policy_id  = module.waf_policy.id   # <--- WAF policy association
-  tags                = var.tags
+  subnet_id           = module.vnet.subnet_ids[var.app_gateway_subnet_name]
+  public_ip_id        = module.public_ip_nginx.public_ip_id # Or your dedicated AppGW IP
+  frontend_port       = var.app_gateway_frontend_port
+  backend_ip_addresses = var.app_gateway_backend_ip_addresses
+  backend_port        = var.app_gateway_backend_port
+  sku_name            = var.app_gateway_sku_name
+  sku_tier            = var.app_gateway_sku_tier
+  capacity            = var.app_gateway_capacity
+  firewall_policy_id  = module.waf_policy.id
+  tags                = var.app_gateway_tags
 }
 
