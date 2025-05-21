@@ -25,7 +25,7 @@ resource "azurerm_application_gateway" "this" {
   }
 
   backend_address_pool {
-    name = "backend-pool"
+    name        = "backend-pool"
     ip_addresses = var.backend_ip_addresses
   }
 
@@ -52,11 +52,11 @@ resource "azurerm_application_gateway" "this" {
     backend_http_settings_name = "http-settings"
   }
 
-  tags = var.tags
-}
+  waf_configuration {
+    enabled            = true
+    firewall_mode      = "Prevention"
+    firewall_policy_id = var.firewall_policy_id
+  }
 
-waf_configuration {
-  enabled            = true
-  firewall_mode      = "Prevention"
-  firewall_policy_id = var.firewall_policy_id
+  tags = var.tags
 }
