@@ -54,3 +54,9 @@ resource "azurerm_application_gateway" "this" {
 
   tags = var.tags
 }
+
+waf_configuration {
+  enabled            = true
+  firewall_mode      = "Prevention"
+  firewall_policy_id = var.firewall_policy_id
+}
