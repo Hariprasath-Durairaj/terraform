@@ -202,12 +202,17 @@ module "backup" {
 }
 
 module "waf_policy" {
-  source              = "../../terraform_modules/terraform-azure-waf"
-  name                = "dhdp-waf-policy"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  mode                = "Prevention"
-}
+  source                  = "../../terraform_modules/terraform-azure-waf"
+  name                    = "dhdp-waf-policy"
+  location                = var.location
+  resource_group_name     = var.resource_group_name
+  mode                    = "Prevention"
+  file_upload_limit_in_mb = 100
+  max_request_body_size_in_kb = 128
+  custom_rules            = [] # Or provide rules as needed
+  owasp_version           = "3.2"
+  tags                    = var.tags
+
 
 module "app_gateway" {
   source              = "../../terraform_modules/terraform-azure-app-gateway"
