@@ -212,3 +212,16 @@ module "waf_policy" {
   resource_group_name = var.resource_group_name
   mode                = "Prevention"
 }
+
+module "app_gateway" {
+  source              = "../../terraform_modules/terraform-azure-app-gateway"
+  name                = var.app_gateway_name
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  frontend_ip_config  = { ... }  # fill in with your config
+  backend_pools       = { ... }
+  waf_enabled         = true
+  firewall_policy_id  = module.waf_policy.id   # <--- WAF policy association
+  tags                = var.tags
+}
+
