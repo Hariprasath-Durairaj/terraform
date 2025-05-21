@@ -206,7 +206,7 @@ module "backup" {
 }
 
 module "waf_policy" {
-  source              = "../../terraform_modules/terraform-azure-waf-policy"
+  source              = "../../terraform_modules/terraform-azure-waf"
   name                = "dhdp-waf-policy"
   location            = var.location
   resource_group_name = var.resource_group_name
