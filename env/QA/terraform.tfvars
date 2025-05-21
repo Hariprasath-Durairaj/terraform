@@ -187,6 +187,30 @@ enable_monitoring               = true
 private_cluster_enabled         = false
 api_server_authorized_ip_ranges = []
 
+# Application Gateway
+app_gateway_name = "dhdp-qa-appgw"
+
+# Subnet for Application Gateway (referencing your subnets map)
+app_gateway_subnet_name = "appgw-subnet" # This should match the key in your subnets map
+
+# Public IP for App Gateway
+app_gateway_public_ip_name = "dhdp-qa-appgw-pip"  # If creating a dedicated one, or use existing
+
+# Frontend port
+app_gateway_frontend_port = 80
+
+# Backend IP addresses (update this with your actual AKS ingress controller/service IP)
+app_gateway_backend_ip_addresses = ["10.31.1.4"]
+
+# Backend port
+app_gateway_backend_port = 80
+
+# SKU and capacity
+app_gateway_sku_name  = "WAF_v2"
+app_gateway_sku_tier  = "WAF_v2"
+app_gateway_capacity  = 2
+
+
 
 
 
