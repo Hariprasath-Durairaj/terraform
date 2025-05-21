@@ -227,7 +227,7 @@ module "app_gateway" {
   sku_name            = var.app_gateway_sku_name
   sku_tier            = var.app_gateway_sku_tier
   capacity            = var.app_gateway_capacity
-  firewall_policy_id  = module.waf_policy.id
+  firewall_policy_id  = module.waf_policy.waf_policy_id
   tags                = var.app_gateway_tags
 }
 
