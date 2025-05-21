@@ -225,3 +225,49 @@ variable "enable_monitoring" {
   type        = bool
   default     = true
 }
+
+
+variable "app_gateway_name" {
+  description = "Name of the Application Gateway"
+  type        = string
+}
+
+variable "app_gateway_subnet_name" {
+  description = "The subnet key from the subnets map for the Application Gateway"
+  type        = string
+}
+
+variable "app_gateway_frontend_port" {
+  description = "Frontend port number for App Gateway"
+  type        = number
+}
+
+variable "app_gateway_backend_ip_addresses" {
+  description = "List of backend IP addresses for App Gateway backend pool"
+  type        = list(string)
+}
+
+variable "app_gateway_backend_port" {
+  description = "Backend port number for App Gateway"
+  type        = number
+}
+
+variable "app_gateway_sku_name" {
+  description = "SKU name for Application Gateway"
+  type        = string
+}
+
+variable "app_gateway_sku_tier" {
+  description = "SKU tier for Application Gateway"
+  type        = string
+}
+
+variable "app_gateway_capacity" {
+  description = "Capacity for Application Gateway"
+  type        = number
+}
+
+variable "app_gateway_tags" {
+  description = "Tags for Application Gateway"
+  type        = map(string)
+}
