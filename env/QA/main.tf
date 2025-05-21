@@ -212,6 +212,7 @@ module "waf_policy" {
   custom_rules            = [] # Or provide rules as needed
   owasp_version           = "3.2"
   tags                    = var.tags
+}
 
 
 module "app_gateway" {
