@@ -1,0 +1,41 @@
+# terraform-azure-tag-policy
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+## Terraform Module: Azure Tag Policy
+
+A reusable Terraform module to enforce organizational tagging standards in Azure using Azure Policy.  
+This module requires that a specified tag (with a value) is present on all resources within a given Azure subscription or resource group.
+
+---
+
+## Features
+
+- Creates a custom Azure Policy Definition to require a tag on all resources.
+- Assigns the policy to a subscription or resource group of your choice.
+- Missing tags are automatically added with a default value using the `modify` effect.
+- Suitable for use in any environment (dev, test, staging, prod, etc.).
+- Supports integration with enterprise-scale landing zones and existing Terraform environments.
+
+---
+
+## Usage
+
+```hcl
+module "require_costcenter_tag" {
+  source                 = "github.com/<YOUR_ORG>/terraform-azure-tag-policy"
+  policy_definition_name = "require-costcenter-tag"
+  policy_assignment_name = "assign-require-costcenter-tag"
+  scope                  = "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  required_tag_name      = "CostCenter"
+  required_tag_value     = "12345"
+}
+
+module "require_owner_tag" {
+  source                 = "github.com/<YOUR_ORG>/terraform-azure-tag-policy"
+  policy_definition_name = "require-owner-tag"
+  policy_assignment_name = "assign-require-owner-tag"
+  scope                  = "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  required_tag_name      = "Owner"
+  required_tag_value     = "team@example.com"
+}
