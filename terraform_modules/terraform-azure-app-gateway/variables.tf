@@ -63,3 +63,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "firewall_policy_id" {
+  description = "ID of the WAF policy"
+  type        = string
+  default     = null
+}
