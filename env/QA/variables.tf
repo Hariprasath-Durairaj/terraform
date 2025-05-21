@@ -233,17 +233,17 @@ variable "app_gateway_name" {
 }
 
 variable "app_gateway_subnet_name" {
-  description = "The subnet key from the subnets map for the Application Gateway"
+  description = "Name of the subnet for the Application Gateway"
   type        = string
 }
 
 variable "app_gateway_frontend_port" {
-  description = "Frontend port number for App Gateway"
+  description = "Frontend port for the Application Gateway"
   type        = number
 }
 
 variable "app_gateway_backend_ip_addresses" {
-  description = "List of backend IP addresses for App Gateway backend pool"
+  description = "List of backend IP addresses for the Application Gateway"
   type        = list(string)
 }
 
