@@ -210,8 +210,15 @@ app_gateway_sku_name  = "WAF_v2"
 app_gateway_sku_tier  = "WAF_v2"
 app_gateway_capacity  = 2
 
-
-
+custom_rules = [
+  {
+    name         = "AllowTrustedIPs"
+    priority     = 1
+    rule_type    = "MatchRule"
+    match_values = ["1.2.3.4", "5.6.7.8"]
+    action       = "Allow"
+  }
+]
 
 
 
