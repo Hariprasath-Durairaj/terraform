@@ -1,148 +1,75 @@
-Azure Bastion Host Terraform Module
+# Azure Bastion Host Terraform Module
 
-Overview
+This Terraform module provisions an **Azure Bastion Host**, which provides secure and seamless RDP/SSH access to your virtual machines over SSL without exposing them to public IPs.
 
-This Terraform module deploys an Azure Bastion Host, enabling secure RDP and SSH access to your virtual machines through the Azure Portal without exposing them to the public internet.
+## 📁 Module Contents
 
-Requirements
+- `main.tf` – Declares the Bastion Host resource.
+- `variables.tf` – Defines the required input variables.
+- `output.tf` – Outputs the Bastion Host ID.
+- `versions.tf` – Specifies provider and Terraform version constraints.
 
-Terraform >= 1.3.0
+---
 
-AzureRM provider ~> 3.100
+## 🚀 Usage
 
-Providers
-
-Name
-
-Version
-
-azurerm
-
-~> 3.100
-
-Resources
-
-Name
-
-Type
-
-this
-
-azurerm_bastion_host
-
-Module Usage
-
+```hcl
 module "bastion" {
-  source              = "../path/to/module"
-
-  # Core settings
-  name                = "my-bastion-host"
-  location            = "eastus"
-  resource_group_name = "my-resource-group"
-
-  # Networking
-  # The subnet must be named 'AzureBastionSubnet' and have a /26 prefix or larger
-  subnet_id           = azurerm_subnet.bastion.id
-
-  # Public IP must be Standard SKU
-  public_ip_id        = azurerm_public_ip.bastion.id
-
-  # Optional tags
+  source              = "../terraform_modules/azure-bastion"
+  
+  name                = "dhdp-bastion"
+  location            = "Canada Central"
+  resource_group_name = "dhdp-lab-resource-group"
+  subnet_id           = azurerm_subnet.bastion_subnet.id
+  public_ip_id        = azurerm_public_ip.bastion_public_ip.id
   tags = {
-    environment = "dev"
-    project     = "my-project"
+    Environment = "QA"
+    ManagedBy   = "Terraform"
   }
 }
+````
 
-Inputs
+---
 
-Name
+## 📥 Input Variables
 
-Description
+| Variable              | Description                                                 | Type          | Required         |
+| --------------------- | ----------------------------------------------------------- | ------------- | ---------------- |
+| `name`                | Name of the Bastion Host                                    | `string`      | ✅                |
+| `location`            | Azure region                                                | `string`      | ✅                |
+| `resource_group_name` | Name of the resource group                                  | `string`      | ✅                |
+| `subnet_id`           | Subnet ID for the Bastion Host (must be AzureBastionSubnet) | `string`      | ✅                |
+| `public_ip_id`        | Public IP resource ID to associate with Bastion             | `string`      | ✅                |
+| `tags`                | Optional tags to apply to the Bastion Host                  | `map(string)` | ❌ (default `{}`) |
 
-Type
+---
 
-Default
+## 📤 Output
 
-Required
+| Output Name  | Description                |
+| ------------ | -------------------------- |
+| `bastion_id` | The ID of the Bastion Host |
 
-name
+---
 
-The name of the Bastion Host
+## ✅ Requirements
 
-string
+* Terraform `>= 1.3.0`
+* AzureRM Provider `~> 3.100`
+* Subnet must be named `AzureBastionSubnet`
 
-n/a
+---
 
-yes
+## 🛡️ Security Best Practices
 
-location
+* Always deploy Bastion in a dedicated subnet named `AzureBastionSubnet`.
+* Lock down access via NSGs and Role-Based Access Control (RBAC).
+* Do not assign public IPs directly to virtual machines.
 
-Azure region
+---
 
-string
+## 📄 License
 
-n/a
+This module is maintained by the CloudOps Team. Contributions welcome!
 
-yes
-
-resource_group_name
-
-Name of the resource group
-
-string
-
-n/a
-
-yes
-
-subnet_id
-
-ID of the subnet (must be named AzureBastionSubnet)
-
-string
-
-n/a
-
-yes
-
-public_ip_id
-
-ID of the Standard SKU Public IP for the Bastion Host
-
-string
-
-n/a
-
-yes
-
-tags
-
-Tags to apply to the Bastion Host
-
-map(string)
-
-{}
-
-no
-
-Outputs
-
-Name
-
-Description
-
-bastion_id
-
-The ID of the created Bastion Host
-
-Notes
-
-Ensure the target subnet is named exactly AzureBastionSubnet and is large enough (minimum /26).
-
-The public IP address must use the Standard SKU.
-
-License
-
-This module is released under the MIT License.
 
