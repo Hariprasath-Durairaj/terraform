@@ -270,4 +270,5 @@ variable "app_gateway_capacity" {
 variable "app_gateway_tags" {
   description = "Tags for Application Gateway"
   type        = map(string)
+  default     = {}
 }
