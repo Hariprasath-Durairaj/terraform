@@ -53,10 +53,13 @@ resource "azurerm_application_gateway" "this" {
   }
 
   waf_configuration {
-    enabled            = true
-    firewall_mode      = "Prevention"
-    firewall_policy_id = var.firewall_policy_id
+    enabled          = true
+    firewall_mode    = "Prevention"
+    rule_set_type    = "OWASP"
+    rule_set_version = "3.2"
   }
+
+  firewall_policy_id = var.firewall_policy_id  # <-- moved to top level
 
   tags = var.tags
 }
