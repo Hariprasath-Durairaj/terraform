@@ -69,3 +69,15 @@ variable "firewall_policy_id" {
   type        = string
   default     = null
 }
+
+variable "app_gateway_public_ip_name" {
+  description = "Public IP resource name for Application Gateway"
+  type        = string
+  default     = null
+}
+
+variable "custom_rules" {
+  description = "Custom WAF rules for Application Gateway"
+  type        = list(any)
+  default     = []
+}
