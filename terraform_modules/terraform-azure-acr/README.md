@@ -1,24 +1,42 @@
-# Azure Container Registry (ACR) Terraform Module
+# Terraform Module: Azure Container Registry (ACR)
 
-This module provisions an Azure Container Registry with optional managed identity and access configuration.
+This module provisions an Azure Container Registry (ACR) with optional admin access and identity settings.
 
-## Usage
+## Inputs
 
-```hcl
-module "acr" {
-  source                         = "../terraform-azure-acr"
-  name                           = "dhdpqaacr001"
-  location                       = var.location
-  resource_group_name            = var.resource_group_name
-  sku                            = "Standard"
-  admin_enabled                  = false
-  public_network_access_enabled  = false
-  identity_type                  = "SystemAssigned"
-  tags                           = var.tags
-}
-```
+| Name                          | Type          | Default     | Description                                      |
+|-------------------------------|---------------|-------------|--------------------------------------------------|
+| `name`                        | `string`      | n/a         | Name of the ACR.                                 |
+| `resource_group_name`         | `string`      | n/a         | Resource group name.                             |
+| `location`                    | `string`      | n/a         | Azure region.                                    |
+| `sku`                         | `string`      | `"Standard"`| SKU of the ACR: Basic, Standard, Premium.        |
+| `admin_enabled`               | `bool`        | `false`     | Enable admin user.                               |
+| `public_network_access_enabled`| `bool`      | `false`     | Allow public access to ACR.                      |
+| `identity_type`               | `string`      | `"SystemAssigned"` | Type of managed identity.                 |
+| `tags`                        | `map(string)` | `{}`        | Tags to apply.                                   |
 
 ## Outputs
 
-- `acr_id` — ID of the ACR
-- `acr_login_server` — Login server URL for Docker/Helm image push/pull
+| Name              | Description                          |
+|-------------------|--------------------------------------|
+| `acr_id`          | Resource ID of the ACR.              |
+| `acr_login_server`| Login server URL of the ACR.         |
+
+## Example Usage
+
+```hcl
+module "acr" {
+  source = "./modules/acr"
+
+  name                          = "myacrregistry"
+  resource_group_name           = "my-rg"
+  location                      = "Canada Central"
+  sku                           = "Premium"
+  admin_enabled                 = true
+  public_network_access_enabled = false
+  identity_type                 = "SystemAssigned"
+  tags = {
+    environment = "dev"
+    managedby   = "terraform"
+  }
+}
