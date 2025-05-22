@@ -220,6 +220,12 @@ custom_rules = [
   }
 ]
 
+app_gateway_tags = {
+  Environment = "QA"
+  Project     = "DHDP"
+  ManagedBy   = "Terraform"
+  Owner       = "HP"
+}
 
 
 
