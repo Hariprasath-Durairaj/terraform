@@ -90,7 +90,7 @@ default_node_pool = {
 user_node_pools = {
   bitnobi = {
     name                = "bitnobi"
-    vm_size             = "Standard_DS3_v3"
+    vm_size             = "Standard_D2s_v3"
     os_disk_size_gb     = 100
     enable_auto_scaling = true
     min_count           = 1
@@ -107,7 +107,7 @@ user_node_pools = {
 
   candig = {
     name                = "candig"
-    vm_size             = "Standard_DS3_v3"
+    vm_size             = "Standard_D2s_v3"
     os_disk_size_gb     = 50
     enable_auto_scaling = true
     min_count           = 1
@@ -124,7 +124,7 @@ user_node_pools = {
 
   keycloak = {
     name                = "keycloak"
-    vm_size             = "Standard_DS3_v3"
+    vm_size             = "Standard_D2s_v3"
     os_disk_size_gb     = 50
     enable_auto_scaling = true
     min_count           = 1
@@ -141,7 +141,7 @@ user_node_pools = {
 
   integrateai = {
     name                = "integrateai"
-    vm_size             = "Standard_DS3_v3"
+    vm_size             = "Standard_D2s_v3"
     os_disk_size_gb     = 50
     enable_auto_scaling = true
     min_count           = 1
@@ -158,7 +158,7 @@ user_node_pools = {
 
   webapp = {
     name                = "webapp"
-    vm_size             = "Standard_DS3_v3"
+    vm_size             = "Standard_D2s_v3"
     os_disk_size_gb     = 50
     enable_auto_scaling = true
     min_count           = 1
