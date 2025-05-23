@@ -1,4 +1,4 @@
-trigger: none  # Disable CI trigger for manual or scheduled runs
+trigger: none
 
 pool:
   name: Default
@@ -12,27 +12,207 @@ variables:
   backendKey: 'qa.terraform.tfstate'
 
 stages:
-  - template: .azure-pipelines/templates/init-stage.yml
-    parameters:
-      terraformVersion: '1.5.7'
+  - stage: Init
+    displayName: 'Terraform Init'
+    jobs:
+      - job: Init
+        steps:
+          - checkout: self
+            persistCredentials: true
 
-  - template: .azure-pipelines/templates/validate-stage.yml
-    parameters:
-      terraformVersion: '1.5.7'
+          - script: |
+              rm -rf .terraform
+              rm -f .terraform.lock.hcl
+            displayName: 'Clean .terraform and lockfile'
 
-  - template: .azure-pipelines/templates/plan-stage.yml
-    parameters:
-      terraformVersion: '1.5.7'
+          - script: |
+              echo "##vso[task.setvariable variable=ARM_USE_OIDC]true"
+              echo "##vso[task.setvariable variable=ARM_CLIENT_ID]$(servicePrincipalId)"
+              echo "##vso[task.setvariable variable=ARM_TENANT_ID]$(tenantId)"
+              echo "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID]$(subscriptionId)"
+            displayName: 'Set OIDC Auth Variables'
 
-  - template: .azure-pipelines/templates/apply-stage.yml
-    parameters:
-      terraformVersion: '1.5.7'
+          - task: TerraformInstaller@1
+            displayName: 'Install Terraform'
+            inputs:
+              terraformVersion: '1.5.7'
 
-  - template: .azure-pipelines/templates/output-stage.yml
-    parameters:
-      terraformVersion: '1.5.7'
+          - script: terraform -version
+            displayName: 'Show Terraform Version'
 
-  # Optional: uncomment to enable destroy in CI
-  # - template: .azure-pipelines/templates/destroy-stage.yml
-  #   parameters:
-  #     terraformVersion: '1.5.7'
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Init'
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              workingDirectory: '$(workingDirectory)'
+              backendServiceArm: '$(serviceConnection)'
+              backendAzureRmResourceGroupName: '$(backendResourceGroup)'
+              backendAzureRmStorageAccountName: '$(backendStorageAccount)'
+              backendAzureRmContainerName: '$(backendContainerName)'
+              backendAzureRmKey: '$(backendKey)'
+              backendAzureRmUseOIDC: true
+              useTerraformVersion: '1.5.7'
+
+  - stage: Validate
+    displayName: 'Terraform Validate'
+    dependsOn: Init
+    jobs:
+      - job: Validate
+        steps:
+          - checkout: self
+            persistCredentials: true
+
+          - script: |
+              rm -rf .terraform
+              rm -f .terraform.lock.hcl
+            displayName: 'Clean .terraform and lockfile'
+
+          - script: |
+              echo "##vso[task.setvariable variable=ARM_USE_OIDC]true"
+              echo "##vso[task.setvariable variable=ARM_CLIENT_ID]$(servicePrincipalId)"
+              echo "##vso[task.setvariable variable=ARM_TENANT_ID]$(tenantId)"
+              echo "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID]$(subscriptionId)"
+            displayName: 'Set OIDC Auth Variables'
+
+          - task: TerraformInstaller@1
+            displayName: 'Install Terraform'
+            inputs:
+              terraformVersion: '1.5.7'
+
+          - script: terraform -version
+            displayName: 'Show Terraform Version'
+
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Init (Validate)'
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              workingDirectory: '$(workingDirectory)'
+              backendServiceArm: '$(serviceConnection)'
+              backendAzureRmResourceGroupName: '$(backendResourceGroup)'
+              backendAzureRmStorageAccountName: '$(backendStorageAccount)'
+              backendAzureRmContainerName: '$(backendContainerName)'
+              backendAzureRmKey: '$(backendKey)'
+              backendAzureRmUseOIDC: true
+              useTerraformVersion: '1.5.7'
+
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Validate'
+            inputs:
+              provider: 'azurerm'
+              command: 'validate'
+              workingDirectory: '$(workingDirectory)'
+              environmentServiceNameAzureRM: '$(serviceConnection)'
+              useTerraformVersion: '1.5.7'
+
+  - stage: Plan
+    displayName: 'Terraform Plan'
+    dependsOn: Validate
+    jobs:
+      - job: Plan
+        steps:
+          - checkout: self
+            persistCredentials: true
+
+          - script: |
+              rm -rf .terraform
+              rm -f .terraform.lock.hcl
+            displayName: 'Clean .terraform and lockfile'
+
+          - script: |
+              echo "##vso[task.setvariable variable=ARM_USE_OIDC]true"
+              echo "##vso[task.setvariable variable=ARM_CLIENT_ID]$(servicePrincipalId)"
+              echo "##vso[task.setvariable variable=ARM_TENANT_ID]$(tenantId)"
+              echo "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID]$(subscriptionId)"
+            displayName: 'Set OIDC Auth Variables'
+
+          - task: TerraformInstaller@1
+            displayName: 'Install Terraform'
+            inputs:
+              terraformVersion: '1.5.7'
+
+          - script: terraform -version
+            displayName: 'Show Terraform Version'
+
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Init (Plan)'
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              workingDirectory: '$(workingDirectory)'
+              backendServiceArm: '$(serviceConnection)'
+              backendAzureRmResourceGroupName: '$(backendResourceGroup)'
+              backendAzureRmStorageAccountName: '$(backendStorageAccount)'
+              backendAzureRmContainerName: '$(backendContainerName)'
+              backendAzureRmKey: '$(backendKey)'
+              backendAzureRmUseOIDC: true
+              useTerraformVersion: '1.5.7'
+
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Plan'
+            inputs:
+              provider: 'azurerm'
+              command: 'plan'
+              workingDirectory: '$(workingDirectory)'
+              environmentServiceNameAzureRM: '$(serviceConnection)'
+              publishPlanResults: true
+              planOutput: 'tfplan.out'
+              varsFile: 'qa.tfvars'
+              useTerraformVersion: '1.5.7'
+  - stage: Apply
+    displayName: 'Terraform Apply'
+    dependsOn: Plan
+    jobs:
+      - job: Apply
+        steps:
+          - checkout: self
+            persistCredentials: true
+
+          - script: |
+              rm -rf .terraform
+              rm -f .terraform.lock.hcl
+            displayName: 'Clean .terraform and lockfile'
+
+          - script: |
+              echo "##vso[task.setvariable variable=ARM_USE_OIDC]true"
+              echo "##vso[task.setvariable variable=ARM_CLIENT_ID]$(servicePrincipalId)"
+              echo "##vso[task.setvariable variable=ARM_TENANT_ID]$(tenantId)"
+              echo "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID]$(subscriptionId)"
+            displayName: 'Set OIDC Auth Variables'
+
+          - task: TerraformInstaller@1
+            displayName: 'Install Terraform'
+            inputs:
+              terraformVersion: '1.5.7'
+
+          - script: terraform -version
+            displayName: 'Show Terraform Version'
+
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Init (Apply)'
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              workingDirectory: '$(workingDirectory)'
+              backendServiceArm: '$(serviceConnection)'
+              backendAzureRmResourceGroupName: '$(backendResourceGroup)'
+              backendAzureRmStorageAccountName: '$(backendStorageAccount)'
+              backendAzureRmContainerName: '$(backendContainerName)'
+              backendAzureRmKey: '$(backendKey)'
+              backendAzureRmUseOIDC: true
+              useTerraformVersion: '1.5.7'
+
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Apply'
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              workingDirectory: '$(workingDirectory)'
+              environmentServiceNameAzureRM: '$(serviceConnection)'
+              useTerraformVersion: '1.5.7'
+              planOrStateFilePath: 'tfplan.out'
+              varsFile: 'qa.tfvars'
+              # Uncomment below if you want auto-approval (no manual input)
+              # commandOptions: '-auto-approve'
+
