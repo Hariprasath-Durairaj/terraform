@@ -1,6 +1,6 @@
 # DHDP QA Environment – Terraform Infrastructure
 
-This directory contains the Terraform configuration for provisioning the **Quality Assurance (QA)** environment for the **Data Health Digital Platform (DHDP)** in Microsoft Azure.
+This directory contains the Terraform configuration for provisioning the **Quality Assurance (QA)** environment for the **DHDP** in Microsoft Azure.
 
 ---
 
