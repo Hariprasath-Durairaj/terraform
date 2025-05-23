@@ -1,6 +1,6 @@
 # Terraform Azure Infrastructure for DHDP
 
-This repository provides modular, reusable, and scalable Terraform code to deploy and manage Azure infrastructure for the **Data Health Digital Platform (DHDP)** across multiple environments (DEV, QA, PROD). It includes AKS provisioning, VNet design, private DNS, peering, WAF policies, and tagging standards.
+This repository provides modular, reusable, and scalable Terraform code to deploy and manage Azure infrastructure for the **DHDP** across multiple environments (DEV, QA, PROD). It includes AKS provisioning, VNet design, private DNS, peering, WAF policies, and tagging standards.
 
 ---
 
