@@ -1,6 +1,6 @@
 # DHDP Terraform CI/CD Pipelines
 
-This directory contains Azure DevOps pipeline definitions used for deploying the DHDP (Data Health Digital Platform) infrastructure across environments like **DEV**, **QA**, and **PROD**.
+This directory contains Azure DevOps pipeline definitions used for deploying the DHDP infrastructure across environments like **DEV**, **QA**, and **PROD**.
 
 It uses modular YAML templates for Terraform workflows (`init`, `validate`, `plan`, `apply`, `destroy`, `output`) and separates concerns for better reusability and automation.
 
