@@ -160,11 +160,11 @@ stages:
               planOutput: 'tfplan.out'
               varsFile: 'qa.tfvars'
               useTerraformVersion: '1.5.7'
-  - stage: Apply
-    displayName: 'Terraform Apply'
+  - stage: Destroy
+    displayName: 'Terraform Destroy'
     dependsOn: Plan
     jobs:
-      - job: Apply
+      - job: Destroy
         steps:
           - checkout: self
             persistCredentials: true
@@ -190,7 +190,7 @@ stages:
             displayName: 'Show Terraform Version'
 
           - task: TerraformTaskV4@4
-            displayName: 'Terraform Init (Apply)'
+            displayName: 'Terraform Init (Destroy)'
             inputs:
               provider: 'azurerm'
               command: 'init'
@@ -204,15 +204,14 @@ stages:
               useTerraformVersion: '1.5.7'
 
           - task: TerraformTaskV4@4
-            displayName: 'Terraform Apply'
+            displayName: 'Terraform Destroy'
             inputs:
               provider: 'azurerm'
-              command: 'apply'
+              command: 'destroy'
               workingDirectory: '$(workingDirectory)'
               environmentServiceNameAzureRM: '$(serviceConnection)'
               useTerraformVersion: '1.5.7'
-              planOrStateFilePath: 'tfplan.out'
               varsFile: 'qa.tfvars'
-              # Uncomment below if you want auto-approval (no manual input)
-              # commandOptions: '-auto-approve'
+              commandOptions: '-auto-approve'
+
 
